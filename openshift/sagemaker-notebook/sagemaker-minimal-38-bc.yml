@@ -1,0 +1,35 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: sagemaker-s2i-minimal-notebook-py38
+spec:
+  source:
+    type: Dockerfile
+    dockerfile: |
+      FROM quay.io/thoth-station/s2i-minimal-py38-notebook:v0.3.0
+      USER root
+      RUN pip install sagemaker && \
+          curl https://rclone.org/install.sh | bash && \
+          rclone genautocomplete bash
+      RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+          unzip awscliv2.zip && \
+          ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update && \
+          rm -rf aws *.zip && \
+          fix-permissions /opt/app-root -P
+      USER 1001
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 's2i-minimal-notebook:v0.3.0-py38'
+      env:
+        - name: UPGRADE_PIP_TO_LATEST
+          value: 'True'
+  output:
+    to:
+      kind: ImageStreamTag
+      name: sagemaker-notebook:s2i-minimal-notebook-py38
+  triggers:
+    - type: ImageChange
+    - type: ConfigChange

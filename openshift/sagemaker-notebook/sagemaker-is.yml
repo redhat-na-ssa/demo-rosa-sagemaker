@@ -1,0 +1,28 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: sagemaker-notebook
+  labels:
+    app.kubernetes.io/part-of: jupyterhub
+    opendatahub.io/notebook-image: 'true'
+  annotations:
+    opendatahub.io/notebook-image-desc: |
+      Jupyter notebook image with a set of data science libraries that advanced
+      AI/ML notebooks will use as a base image to provide a standard for
+      libraries avialable in all notebooks
+    opendatahub.io/notebook-image-name: Sagemaker
+    opendatahub.io/notebook-image-url: 'https://github.com/thoth-station/s2i-generic-data-science-notebook'
+spec:
+  tags:
+    - name: s2i-generic-data-science-notebook
+      annotations:
+        opendatahub.io/notebook-python-dependencies: >-
+          [{"name":"Boto3","version":"1.17.11"},{"name":"Kafka-Python","version":"2.0.2"},{"name":"Matplotlib","version":"3.4.2"},{"name":"Numpy","version":"1.21.0"},{"name":"Pandas","version":"1.2.5"},{"name":"Scipy","version":"1.7.0"}]
+        opendatahub.io/notebook-software: '[{"name":"Python","version":"v3.8.6"}]'
+        openshift.io/imported-from: quay.io/thoth-station/s2i-generic-data-science-notebook
+    - name: s2i-minimal-notebook-py36
+      annotations:
+        opendatahub.io/notebook-software: '[{"name":"Python","version":"v3.6.8"}]'
+    - name: s2i-minimal-notebook-py38
+      annotations:
+        opendatahub.io/notebook-software: '[{"name":"Python","version":"v3.8.8"}]'

@@ -1,0 +1,6 @@
+apiVersion: s3.services.k8s.aws/v1alpha1
+kind: Bucket
+metadata:
+  name: magic-smoke-s3
+spec:
+  name: magic-smoke-s3
