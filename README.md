@@ -1,5 +1,5 @@
 # ROSA running Open Data Hub Operator with SageMaker 
-Demonstrate using ROSA to train models with AWS SageMaker SDK. 
+Demonstrate using ROSA to train models with AWS SageMaker SDK.
 
 # Use Case
 The challenge: Can you accurately predict wether a fingerprint comes from a left or right hand?
@@ -139,6 +139,7 @@ The notebook = ODH_SageMaker_SDK.ipynb
 
 # Links
 - [Sagemaker lifecycle config examples](https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples)
+- [Kaggle - Sokoto Coventry Fingerprint Dataset](https://www.kaggle.com/datasets/ruizgara/socofing)
 
 # Bugs
 
