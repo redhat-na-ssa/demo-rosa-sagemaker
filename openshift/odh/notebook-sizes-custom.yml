@@ -5,6 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/part-of: jupyterhub
     component.opendatahub.io/name: jupyterhub
+    # the following label (jupyterhub) is required for ODH to use the config
     jupyterhub: singleuser-profiles
     opendatahub.io/component: 'true'
 data:
