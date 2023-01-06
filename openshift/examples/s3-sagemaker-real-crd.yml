@@ -1,7 +1,7 @@
 apiVersion: s3.services.k8s.aws/v1alpha1
 kind: Bucket
 metadata:
-  name: xond-data
+  name: sagemaker-real
   namespace: fingerprint-id
 spec:
-  name: xond-data
+  name: sagemaker-real
