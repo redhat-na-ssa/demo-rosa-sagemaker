@@ -25,7 +25,6 @@ EOF
 }
 
 setup_idle(){
-set -ex
 
 # OVERVIEW
 # This script stops a SageMaker notebook once it's idle for more than 60 minutes (default time)
