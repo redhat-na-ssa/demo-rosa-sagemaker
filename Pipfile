@@ -22,4 +22,3 @@ tensorflow-io-gcs-filesystem = "==0.28.0"
 [dev-packages]
 
 [requires]
-python_version = "3.8"
