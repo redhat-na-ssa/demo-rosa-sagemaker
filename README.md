@@ -8,7 +8,8 @@ The challenge: Can you accurately predict wether a fingerprint comes from a left
 
 We will develop a model that predicts with high accuracy whether or not a given fingerprint comes from a left or right hand.
 
-There are 3 notebooks that: 
+There are 3 notebooks that:
+
 1. Train a baseline model with default parameters
 1. Hypertune a model for greater performance  
 1. Compress a model for an embedded device
@@ -138,6 +139,7 @@ S3_ENDPOINT_URL=<update>
 The notebook = ODH_SageMaker_SDK.ipynb
 
 # Links
+
 - [Sagemaker lifecycle config examples](https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples)
 - [Kaggle - Sokoto Coventry Fingerprint Dataset](https://www.kaggle.com/datasets/ruizgara/socofing)
 
