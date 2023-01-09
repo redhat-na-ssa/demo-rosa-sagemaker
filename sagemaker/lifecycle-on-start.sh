@@ -11,11 +11,12 @@ set -e
 sudo -u ec2-user -i <<'EOF'
 
 # PARAMETERS
-PACKAGE=scipy
+PACKAGE=tensorflow==2.11
 ENVIRONMENT=python3
 
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
+pip install -U pip
 pip install --upgrade "$PACKAGE"
 
 source /home/ec2-user/anaconda3/bin/deactivate
