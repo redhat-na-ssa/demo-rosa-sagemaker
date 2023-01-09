@@ -1,5 +1,30 @@
 #!/bin/bash
- 
+# https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples
+
+setup_packages(){
+
+set -e
+
+# OVERVIEW
+# This script installs a single pip package in a single SageMaker conda environments.
+
+sudo -u ec2-user -i <<'EOF'
+
+# PARAMETERS
+PACKAGE=scipy
+ENVIRONMENT=python3
+
+source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
+
+pip install --upgrade "$PACKAGE"
+
+source /home/ec2-user/anaconda3/bin/deactivate
+
+EOF
+
+}
+
+setup_idle(){
 set -ex
 
 # OVERVIEW
@@ -40,3 +65,7 @@ echo "Found boto3 at $PYTHON_DIR"
 echo "Starting the SageMaker autostop script in cron"
 
 (crontab -l 2>/dev/null; echo "*/5 * * * * $PYTHON_DIR $PWD/autostop.py --time $IDLE_TIME --ignore-connections >> /var/log/jupyter.log") | crontab -
+}
+
+setup_packages
+setup_idle
