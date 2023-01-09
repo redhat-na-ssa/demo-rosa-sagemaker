@@ -1,0 +1,15 @@
+graphviz
+keras
+keras-tuner
+notebook
+notebook_shim
+numpy
+opencv-python
+pipenv
+sagemaker
+scikit-learn
+seaborn
+tensorflow
+tensorflow-estimator
+tensorflow-io-gcs-filesystem
+keras-tuner
