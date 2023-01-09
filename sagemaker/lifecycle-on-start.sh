@@ -12,7 +12,7 @@ sudo -u ec2-user -i <<'EOF'
 
 # PARAMETERS
 PACKAGE=tensorflow==2.11
-ENVIRONMENT=python3
+ENVIRONMENT=tensorflow2_p38
 
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
