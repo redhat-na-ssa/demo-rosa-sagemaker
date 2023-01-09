@@ -42,7 +42,8 @@ setup_idle(){
 IDLE_TIME=3600
 
 echo "Fetching the autostop script"
-wget https://raw.githubusercontent.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples/master/scripts/auto-stop-idle/autostop.py
+SCRIPT=https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/autostop.py
+wget "${SCRIPT}"
 
 
 echo "Detecting Python install with boto3 install"
