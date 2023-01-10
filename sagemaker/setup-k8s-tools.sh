@@ -59,3 +59,4 @@ setup_oc
 setup_helm
 setup_s2i
 setup_restic
+fix_perms
