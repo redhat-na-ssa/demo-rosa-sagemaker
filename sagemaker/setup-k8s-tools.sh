@@ -5,6 +5,8 @@ COMPLETION_PATH=/etc/bash_completion.d
 
 PATH=${BIN_PATH}:${PATH}
 
+echo ${PATH}
+
 setup_oc(){
 OCP_VERSION=4.10
 DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-client-linux.tar.gz
