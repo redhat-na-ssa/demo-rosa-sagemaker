@@ -3,7 +3,7 @@
 BIN_PATH=/home/ec2-user/.dl_binaries/bin
 COMPLETION_PATH=/etc/bash_completion.d
 
-echo ${PATH}
+PATH=${BIN_PATH}:${PATH}
 
 setup_oc(){
 OCP_VERSION=4.10
