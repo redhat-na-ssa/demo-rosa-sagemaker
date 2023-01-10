@@ -3,7 +3,7 @@
 BIN_PATH=/home/ec2-user/.dl_binaries/bin
 COMPLETION_PATH=/etc/bash_completion.d
 
-PATH=${BIN_PATH}:${PATH}
+export PATH=${BIN_PATH}:${PATH}
 
 echo ${PATH}
 
@@ -46,6 +46,12 @@ curl "${DOWNLOAD_URL}" -sL | bzcat > ${BIN_PATH}/restic
 chmod 755 ${BIN_PATH}/restic
 
 restic generate --bash-completion ${COMPLETION_PATH}/restic.bash
+
+}
+
+fix_perms(){
+
+chown ec2-user:ec2-user -R ${BIN_PATH} 
 
 }
 
