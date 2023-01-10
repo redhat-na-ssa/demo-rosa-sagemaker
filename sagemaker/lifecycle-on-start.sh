@@ -2,7 +2,7 @@
 # https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples
 
 # setup ocp / k8s / misc tools
-curl https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/setup-k8s-tools.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/setup-k8s-tools.sh | bash
 
 setup_packages(){
 
