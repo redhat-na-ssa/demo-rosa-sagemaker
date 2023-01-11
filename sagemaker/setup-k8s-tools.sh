@@ -108,6 +108,7 @@ check_bin s2i
 
 check_bin helm
 check_bin kustomize
+check_bin rclone
 check_bin restic
 
 kludge_sm_perms
