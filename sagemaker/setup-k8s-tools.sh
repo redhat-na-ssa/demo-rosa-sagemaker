@@ -7,7 +7,6 @@ export PATH=${BIN_PATH}:${PATH}
 
 debug(){
 echo "${PATH}"
-conda info --envs
 }
 
 setup_bin(){

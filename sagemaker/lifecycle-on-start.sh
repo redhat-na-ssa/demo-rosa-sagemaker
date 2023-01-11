@@ -19,6 +19,8 @@ ENVIRONMENT=tensorflow2_p38
 
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
+conda info --envs
+
 pip install -U pip
 pip install --upgrade "$PACKAGE"
 
