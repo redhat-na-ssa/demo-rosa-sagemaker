@@ -24,12 +24,14 @@ ENVIRONMENT=$(conda info --envs \
   | grep tensorflow2 \
   | awk '{print $1}')
 
+echo "Conda ENV: $ENVIRONMENT"
+
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
 pip install -U pip
 pip install --upgrade "$PACKAGE"
 
-source /home/ec2-user/anaconda3/bin/deactivate
+conda deactivate
 
 EOF
 
