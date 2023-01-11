@@ -34,6 +34,7 @@ check_bin(){
       ;;
     restic)
       restic generate --bash-completion ${COMPLETION_PATH}/restic.bash
+      restic version
       ;;
     *)
       echo
