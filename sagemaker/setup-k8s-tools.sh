@@ -6,7 +6,8 @@ COMPLETION_PATH=/etc/bash_completion.d
 export PATH=${BIN_PATH}:${PATH}
 
 debug(){
-echo "${PATH}"
+echo "PWD:  $(pwd)"
+echo "PATH: ${PATH}"
 }
 
 setup_bin(){

@@ -15,11 +15,16 @@ sudo -u ec2-user -i <<'EOF'
 
 # PARAMETERS
 PACKAGE=tensorflow==2.11
-ENVIRONMENT=tensorflow2_p38
 
-source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
+source /home/ec2-user/anaconda3/bin/activate
 
 conda info --envs
+
+ENVIRONMENT=$(conda info --envs \
+  | grep tensorflow2 \
+  | awk '{print $1}')
+
+source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
 pip install -U pip
 pip install --upgrade "$PACKAGE"
