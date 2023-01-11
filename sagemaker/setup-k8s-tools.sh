@@ -82,6 +82,19 @@ curl "${DOWNLOAD_URL}" -sL | bzcat > ${BIN_PATH}/restic
 chmod 755 ${BIN_PATH}/restic
 }
 
+download_rclone(){
+curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
+unzip rclone-current-linux-amd64.zip
+cd rclone-*-linux-amd64
+
+cp rclone ${BIN_PATH}
+chown root:root ${BIN_PATH}/rclone
+chmod 755 ${BIN_PATH}/rclone
+
+cd ..
+rm -rf rclone-*-linux-amd64
+}
+
 kludge_sm_perms(){
 chown ec2-user:ec2-user -R ${BIN_PATH}
 }
