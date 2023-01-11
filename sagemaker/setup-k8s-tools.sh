@@ -11,7 +11,7 @@ setup_oc(){
 OCP_VERSION=4.10
 DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-client-linux.tar.gz
 
-curl "${DOWNLOAD_URL}" -sL | tar vzx -C ${BIN_PATH}/ oc kubectl
+curl "${DOWNLOAD_URL}" -sL | tar zx -C ${BIN_PATH}/ oc kubectl
 
 oc completion bash > ${COMPLETION_PATH}/oc.bash
 # . <(oc completion bash)
@@ -19,10 +19,21 @@ oc completion bash > ${COMPLETION_PATH}/oc.bash
 
 }
 
+setup_odo(){
+DOWNLOAD_URL=https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/odo/v3.5.0/odo-linux-amd64.tar.gz
+
+curl "${DOWNLOAD_URL}" -sL | tar zx -C ${BIN_PATH}/
+
+odo completion bash > ${COMPLETION_PATH}/odo.bash
+
+
+}
+
+
 setup_helm(){
 DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/helm/latest/helm-linux-amd64.tar.gz
 
-curl "${DOWNLOAD_URL}" -sL | tar vzx -C ${BIN_PATH}/ helm-linux-amd64
+curl "${DOWNLOAD_URL}" -sL | tar zx -C ${BIN_PATH}/ helm-linux-amd64
 mv  ${BIN_PATH}/helm-linux-amd64  ${BIN_PATH}/helm
 
 helm completion bash > ${COMPLETION_PATH}/helm.bash
@@ -32,7 +43,7 @@ helm completion bash > ${COMPLETION_PATH}/helm.bash
 setup_s2i(){
 DOWNLOAD_URL=https://github.com/openshift/source-to-image/releases/download/v1.3.2/source-to-image-v1.3.2-78363eee-linux-amd64.tar.gz
 
-curl "${DOWNLOAD_URL}" -sL | tar vzx -C ${BIN_PATH}/
+curl "${DOWNLOAD_URL}" -sL | tar zx -C ${BIN_PATH}/
 
 s2i completion bash > ${COMPLETION_PATH}/s2i.bash
 # . <(s2i completion bash)
@@ -56,7 +67,9 @@ chown ec2-user:ec2-user -R ${BIN_PATH}
 }
 
 setup_oc
-setup_helm
 setup_s2i
+setup_odo
+
+setup_helm
 setup_restic
 fix_perms
