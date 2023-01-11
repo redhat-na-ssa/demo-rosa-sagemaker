@@ -5,7 +5,10 @@ COMPLETION_PATH=/etc/bash_completion.d
 
 export PATH=${BIN_PATH}:${PATH}
 
+debug(){
 echo "${PATH}"
+conda info --envs
+}
 
 setup_bin(){
   mkdir -p ${BIN_PATH}/bin
@@ -82,6 +85,7 @@ kludge_sm_perms(){
 chown ec2-user:ec2-user -R ${BIN_PATH}
 }
 
+debug
 setup_bin
 
 check_bin oc
