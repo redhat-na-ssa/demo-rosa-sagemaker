@@ -75,13 +75,6 @@ DOWNLOAD_URL=https://github.com/openshift/source-to-image/releases/download/v1.3
 curl "${DOWNLOAD_URL}" -sL | tar zx -C ${BIN_PATH}/
 }
 
-download_restic(){
-BIN_VERSION=0.14.0
-DOWNLOAD_URL=https://github.com/restic/restic/releases/download/v${BIN_VERSION}/restic_${BIN_VERSION}_linux_amd64.bz2
-curl "${DOWNLOAD_URL}" -sL | bzcat > ${BIN_PATH}/restic
-chmod 755 ${BIN_PATH}/restic
-}
-
 download_rclone(){
 curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
 unzip rclone-current-linux-amd64.zip
@@ -94,6 +87,14 @@ chmod 755 ${BIN_PATH}/rclone
 cd ..
 rm -rf rclone-*-linux-amd64
 }
+
+download_restic(){
+BIN_VERSION=0.14.0
+DOWNLOAD_URL=https://github.com/restic/restic/releases/download/v${BIN_VERSION}/restic_${BIN_VERSION}_linux_amd64.bz2
+curl "${DOWNLOAD_URL}" -sL | bzcat > ${BIN_PATH}/restic
+chmod 755 ${BIN_PATH}/restic
+}
+
 
 kludge_sm_perms(){
 chown ec2-user:ec2-user -R ${BIN_PATH}
