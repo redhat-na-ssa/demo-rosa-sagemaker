@@ -2,6 +2,7 @@ apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: NotebookInstanceLifecycleConfig
 metadata:
   name: lifecycle-from-github
+  namespace: fingerprint-id
 spec:
   onStart:
     - content: IyEvYmluL2Jhc2gKCiMgZGVidWcKaWQKCiMgcnVuIGZyb20gcmVwbwpjdXJsIC1zTCBodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcmVkaGF0LW5hLXNzYS9kZW1vLXJvc2Etc2FnZW1ha2VyL21haW4vc2FnZW1ha2VyL2xpZmVjeWNsZS1vbi1zdGFydC5zaCB8IGJhc2gK

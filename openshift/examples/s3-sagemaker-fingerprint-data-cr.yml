@@ -1,7 +1,7 @@
 apiVersion: s3.services.k8s.aws/v1alpha1
 kind: Bucket
 metadata:
-  name: sagemaker-right
+  name: sagemaker-fingerprint-data
   namespace: fingerprint-id
 spec:
-  name: sagemaker-right
+  name: sagemaker-fingerprint-data
