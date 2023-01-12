@@ -95,9 +95,9 @@ c.NotebookApp.terminado_settings = {'shell_command': ['/bin/bash']}
 " >> ${NB_CFG}
 
 # engage lab dark mode
-LAB_CFG=/home/ec2-user/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
+LAB_CFG=/home/ec2-user/.jupyter/lab/user-settings/@jupyterlab
 [ ! -d "$LAB_CFG" ] && mkdir -p "$LAB_CFG"
-echo '{"theme": "JupyterLab Dark"}' > ${LAB_CFG}/themes.jupyterlab-settings
+echo '{"theme": "JupyterLab Dark"}' > ${LAB_CFG}/apputils-extension/themes.jupyterlab-settings
 
 # go go bigger font
 echo "{
@@ -111,7 +111,7 @@ echo "{
     "closeOnExit": true,
     "pasteWithCtrlV": true,
     "macOptionIsMeta": false
-}" > ${LAB_CFG}/terminal.jupyterlab-settings
+}" > ${LAB_CFG}/terminal-extension/plugin.jupyterlab-settings
 
 # fix perms
 chown ec2-user:ec2-user -R /home/ec2-user/.jupyter/
