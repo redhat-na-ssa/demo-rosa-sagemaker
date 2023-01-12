@@ -84,6 +84,9 @@ echo "Starting the SageMaker autostop script in cron"
 
 activate_good_vibes(){
 
+# tree is helpful
+yum install -y tree
+
 # we want a real bash shell
 echo "export SHELL=/bin/bash" >> /etc/profile.d/jupyter-env.sh
 
