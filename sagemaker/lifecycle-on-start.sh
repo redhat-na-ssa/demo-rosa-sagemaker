@@ -1,9 +1,14 @@
 #!/bin/bash
 # https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples
 
-setup_packages(){
+#set -e
 
-set -e
+setup_cmds(){
+# setup ocp / k8s / misc tools
+curl -sL https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/setup-k8s-tools.sh | bash
+}
+
+setup_packages(){
 
 # OVERVIEW
 # This script installs a single pip package in a single SageMaker conda environments.
@@ -12,14 +17,23 @@ sudo -u ec2-user -i <<'EOF'
 
 # PARAMETERS
 PACKAGE=tensorflow==2.11
-ENVIRONMENT=tensorflow2_p38
+
+source /home/ec2-user/anaconda3/bin/activate
+
+conda info --envs
+
+ENVIRONMENT=$(conda info --envs \
+  | grep tensorflow2 \
+  | awk '{print $1}')
+
+echo "Conda ENV: $ENVIRONMENT"
 
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
 pip install -U pip
 pip install --upgrade "$PACKAGE"
 
-source /home/ec2-user/anaconda3/bin/deactivate
+conda deactivate
 
 EOF
 
@@ -68,5 +82,36 @@ echo "Starting the SageMaker autostop script in cron"
 (crontab -l 2>/dev/null; echo "*/5 * * * * $PYTHON_DIR $PWD/autostop.py --time $IDLE_TIME --ignore-connections >> /var/log/jupyter.log") | crontab -
 }
 
+activate_good_vibes(){
+
+# we want a real bash shell
+echo "export SHELL=/bin/bash" >> /etc/profile.d/jupyter-env.sh
+
+# bash it more - just to make sure
+NB_CFG=/home/ec2-user/.jupyter/jupyter_notebook_config.py
+sed -i '/^c.NotebookApp.terminado_settings.*/d' ${NB_CFG}
+echo "
+c.NotebookApp.terminado_settings = {'shell_command': ['/bin/bash']}
+" >> ${NB_CFG}
+
+# engage lab dark mode
+LAB_CFG=/home/ec2-user/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
+[ ! -d "$LAB_CFG" ] && mkdir -p "$LAB_CFG"
+echo '{"theme": "JupyterLab Dark"}' > ${LAB_CFG}/themes.jupyterlab-settings
+
+# restart command is dependent on current running Amazon Linux and JupyterLab
+CURR_VERSION_AL=$(cat /etc/system-release)
+CURR_VERSION_JS=$(jupyter --version)
+
+if [[ $CURR_VERSION_JS == *$"jupyter_core     : 4.9.1"* ]] && [[ $CURR_VERSION_AL == *$" release 2018"* ]]; then
+	sudo initctl restart jupyter-server --no-wait
+else
+	sudo systemctl --no-block restart jupyter-server.service
+fi
+}
+
+setup_cmds
 setup_packages
 setup_idle
+
+activate_good_vibes
