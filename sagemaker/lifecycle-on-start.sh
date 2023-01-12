@@ -1,6 +1,8 @@
 #!/bin/bash
 # https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples
 
+set -e
+
 setup_cmds(){
 # setup ocp / k8s / misc tools
 curl -sL https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/setup-k8s-tools.sh | bash
@@ -13,7 +15,7 @@ echo "export SHELL=/bin/bash" >> /etc/profile.d/jupyter-env.sh
 
 # bash it more - just to make sure
 NB_CFG=/home/ec2-user/.jupyter/jupyter_notebook_config.py
-sed -i '/^c.NotebookApp.terminado_settings.*/d'
+sed -i '/^c.NotebookApp.terminado_settings.*/d' ${NB_CFG}
 echo "
 c.NotebookApp.terminado_settings = {'shell_command': ['/bin/bash']}
 " >> ${NB_CFG}
@@ -35,8 +37,6 @@ fi
 }
 
 setup_packages(){
-
-set -e
 
 # OVERVIEW
 # This script installs a single pip package in a single SageMaker conda environments.
