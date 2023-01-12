@@ -99,6 +99,22 @@ LAB_CFG=/home/ec2-user/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
 [ ! -d "$LAB_CFG" ] && mkdir -p "$LAB_CFG"
 echo '{"theme": "JupyterLab Dark"}' > ${LAB_CFG}/themes.jupyterlab-settings
 
+echo "{
+    "fontFamily": "ariel, SourceCodePro, monospace",
+    "fontSize": 16,
+    "lineHeight": 1,
+    "theme": "inherit",
+    "screenReaderMode": false,
+    "scrollback": 1000,
+    "shutdownOnClose": false,
+    "closeOnExit": true,
+    "pasteWithCtrlV": true,
+    "macOptionIsMeta": false
+}" > ${LAB_CFG}/terminal.jupyterlab-settings
+
+# fix perms
+chown ec2-user:ec2-user -R /home/ec2-user/.jupyter/
+
 # restart command is dependent on current running Amazon Linux and JupyterLab
 CURR_VERSION_AL=$(cat /etc/system-release)
 CURR_VERSION_JS=$(jupyter --version)
