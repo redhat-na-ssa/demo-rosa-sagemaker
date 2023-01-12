@@ -101,7 +101,7 @@ echo '{"theme": "JupyterLab Dark"}' > ${LAB_CFG}/apputils-extension/themes.jupyt
 
 # go go bigger font
 [ ! -d "$LAB_CFG/terminal-extension" ] && mkdir -p "$LAB_CFG/terminal-extension"
-echo "{
+echo '{
     "fontFamily": "ariel, SourceCodePro, monospace",
     "fontSize": 16,
     "lineHeight": 1,
@@ -112,7 +112,7 @@ echo "{
     "closeOnExit": true,
     "pasteWithCtrlV": true,
     "macOptionIsMeta": false
-}" > ${LAB_CFG}/terminal-extension/plugin.jupyterlab-settings
+}' > ${LAB_CFG}/terminal-extension/plugin.jupyterlab-settings
 
 # fix perms
 chown ec2-user:ec2-user -R /home/ec2-user/.jupyter/
