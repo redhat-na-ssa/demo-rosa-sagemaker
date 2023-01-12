@@ -99,6 +99,7 @@ LAB_CFG=/home/ec2-user/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
 [ ! -d "$LAB_CFG" ] && mkdir -p "$LAB_CFG"
 echo '{"theme": "JupyterLab Dark"}' > ${LAB_CFG}/themes.jupyterlab-settings
 
+# go go bigger font
 echo "{
     "fontFamily": "ariel, SourceCodePro, monospace",
     "fontSize": 16,
