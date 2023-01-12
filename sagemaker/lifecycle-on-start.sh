@@ -1,7 +1,7 @@
 #!/bin/bash
 # https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples
 
-set -e
+#set -e
 
 setup_cmds(){
 # setup ocp / k8s / misc tools
