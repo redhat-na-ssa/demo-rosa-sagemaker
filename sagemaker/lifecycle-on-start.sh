@@ -30,8 +30,8 @@ echo "Conda ENV: $ENVIRONMENT"
 
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
-pip install -U pip
-pip install --upgrade "$PACKAGE"
+pip install -U pip --quiet
+pip install --upgrade "$PACKAGE" --quiet
 
 conda deactivate
 
