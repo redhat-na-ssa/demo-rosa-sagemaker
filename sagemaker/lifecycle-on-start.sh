@@ -96,10 +96,11 @@ c.NotebookApp.terminado_settings = {'shell_command': ['/bin/bash']}
 
 # engage lab dark mode
 LAB_CFG=/home/ec2-user/.jupyter/lab/user-settings/@jupyterlab
-[ ! -d "$LAB_CFG" ] && mkdir -p "$LAB_CFG"
+[ ! -d "$LAB_CFG/apputils-extension" ] && mkdir -p "$LAB_CFG/apputils-extension"
 echo '{"theme": "JupyterLab Dark"}' > ${LAB_CFG}/apputils-extension/themes.jupyterlab-settings
 
 # go go bigger font
+[ ! -d "$LAB_CFG/terminal-extension" ] && mkdir -p "$LAB_CFG/terminal-extension"
 echo "{
     "fontFamily": "ariel, SourceCodePro, monospace",
     "fontSize": 16,
