@@ -29,3 +29,30 @@ kind: Kustomization
 bases:
   - github.com/redhat-cop/gitops-catalog/ack-sagemaker-controller/operator/overlays/<channel>?ref=main
 ```
+
+# Bugs
+
+## Error
+
+Issue with ACK operator deployments not using specific selectors to select pods for a specific deployment. You see all pods associated with all deployments
+
+```
+kind: Deployment
+apiVersion: apps/v1
+...
+
+spec:
+  selector:
+    matchLabels:
+      control-plane: controller
+  template:
+    metadata:
+      labels:
+        control-plane: controller
+```
+
+## Recommendation
+
+Label `control-plane: controller` needs to be more specific
+
+Use: `control-plane: sagemaker-controller`
