@@ -1,9 +1,15 @@
 # Quickstart
 
-```
-oc apply -n <namespace> -f .
-```
+## Install operator
 
-During the installation, you may have to manually approve the installation for the opendatahub operator. Revview and approve the install. Do not upgrade. 
+```
+oc apply -f odh-v*-sub.yml
+```
+During the installation, you may have to manually approve the installation for the opendatahub operator. Review and approve the install. Do not upgrade.
 
-Repeat the oc appy command above after approval.
+## Setup ODH resources
+```
+NAMESPACE=fingerprint-id
+
+oc apply -n ${NAMESPACE} -f notebooks
+```
