@@ -12,4 +12,5 @@ During the installation, you may have to manually approve the installation for t
 NAMESPACE=fingerprint-id
 
 oc apply -n ${NAMESPACE} -f notebooks
+oc apply -n ${NAMESPACE} -f notebooks/sagemaker-notebook
 ```
