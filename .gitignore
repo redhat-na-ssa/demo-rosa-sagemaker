@@ -2,7 +2,7 @@
 data/
 scratch/
 
-# bfg - because data scientists never commit large data to git 
+# bfg - because we never commit large data or passwords to git 
 # need to clean large blobs accidently commited to git
 ..bfg-report/
 
