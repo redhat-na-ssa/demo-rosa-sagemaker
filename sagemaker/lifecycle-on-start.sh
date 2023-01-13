@@ -131,8 +131,21 @@ else
 fi
 }
 
-setup_cmds
+setup_repo(){
+# kludge due no CodeRepository CR
+
+cd /home/ec2-user/SageMaker
+git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
+
+chown ec2-user:ec2-user -R /home/ec2-user/SageMaker
+
+}
+
+# boiler plate
 setup_packages
 setup_idle
 
+# additional
+setup_repo
+setup_cmds
 activate_good_vibes
