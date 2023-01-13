@@ -2,6 +2,10 @@
 data/
 scratch/
 
+# bfg - because data scientists never commit large data to git 
+# need to clean large blobs accidently commited to git
+..bfg-report/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
