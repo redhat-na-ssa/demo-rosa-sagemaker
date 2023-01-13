@@ -1,9 +1,15 @@
-# excludes
+# custom excludes
 data/
 scratch/
 
-# bfg - because we never commit large data or passwords to git 
-# need to clean large blobs accidently commited to git
+# swap files
+*~
+.*~
+*.swp
+.*.swp
+*.swo
+
+# bfg - because we never commit large data or passwords to git
 ..bfg-report/
 
 # Byte-compiled / optimized / DLL files
