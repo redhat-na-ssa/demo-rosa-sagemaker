@@ -2,6 +2,8 @@ apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: NotebookInstance
 metadata:
   name: fingerprint-id
+  annotations:
+    recommendedInstanceType: ml.p3.8xlarge
 spec:
   # NOTICE: There is no CRD for CodeRepository (manual creation) 
   defaultCodeRepository: 'https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git'
