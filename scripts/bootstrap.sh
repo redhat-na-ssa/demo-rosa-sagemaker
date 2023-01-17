@@ -18,9 +18,9 @@ setup_sagemaker(){
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
   
-  aws iam create-role \
-    --policy-name AmazonSageMaker-ExecutionRole \
-    --policy-document file://sagemaker/awsexecutionrole-sagemaker.json
+  # aws iam create-role \
+  #   --policy-name AmazonSageMaker-ExecutionRole \
+  #   --policy-document file://sagemaker/awsexecutionrole-sagemaker.json
 }
 
 setup_odh(){
@@ -69,6 +69,6 @@ setup_s2i_triton(){
 get_aws_key
 
 setup_namespace
-setup_aws_crs
+setup_sagemaker
 setup_odh
 setup_s2i_triton
