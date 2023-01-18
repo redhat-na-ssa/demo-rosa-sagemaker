@@ -3,6 +3,15 @@
 
 NAMESPACE=fingerprint-id
 
+check_oc(){
+  echo "Are you on the right OCP cluster?"
+
+  oc whoami || exit 0 
+  oc status
+
+  sleep 6
+}
+
 get_aws_key(){
   # get aws creds
   export AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
@@ -89,6 +98,7 @@ setup_s3_data(){
 }
 
 setup_demo(){
+  check_oc
   get_aws_key
 
   setup_namespace
