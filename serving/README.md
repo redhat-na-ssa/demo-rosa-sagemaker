@@ -105,7 +105,7 @@ cd application
 ```
 APP_NAMESPACE=clients
 INFERENCE_APP_NAME=fingerprint
-INFERENCE_HOST=$(oc get route triton -n ${MODEL_SERVER_NAMESPACE} --template={{.spec.host}})
+INFERENCE_HOST=$(oc get route ${TRITON_APP_NAME} -n ${MODEL_SERVER_NAMESPACE} --template={{.spec.host}})
 ```
 
 Create a project.
