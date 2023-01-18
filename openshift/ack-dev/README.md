@@ -20,6 +20,10 @@ podman run -it \
 Build a controller (s3)
 
 ```
+# one time script to pull repos
+init_repos.sh
+
+# `go` to it
 cd github.com/aws-controllers-k8s/code-generator/
 
 export SERVICE=s3

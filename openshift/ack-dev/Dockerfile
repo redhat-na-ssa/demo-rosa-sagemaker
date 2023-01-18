@@ -14,13 +14,17 @@ RUN apt update && \
 
 # install go
 ENV GO_VERSION=1.19.5
+
 ENV GOPATH=/go
-ENV PATH=${GOPATH}/bin:$PATH
-RUN curl -L https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz | tar -C / -xz && \
+ENV GOCACHE=/go/src/.cache
+
+ENV PATH=${GOPATH}/bin:/opt/go/bin:$PATH
+
+RUN mkdir -p /go/{bin,src} && \ 
+    curl -L https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz | tar -C /opt/ -xz && \
     go version
 
-ENV GOCACHE=/go/.cache
-WORKDIR $GOROOT/src
+WORKDIR $GOPATH/src
 
 COPY init_repos.sh /usr/local/bin
 
