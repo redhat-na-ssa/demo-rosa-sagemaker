@@ -9,8 +9,8 @@ from a public s3 bucket.
 
 - `MODEL_SERVER_NAMESPACE=models`
 - `TRITON_APP_NAME=triton`
-- `MODEL_REPOSITORY` (i.e. s3://mybucket/models/triton)
-- `AWS_DEFAULT_REGION` (the region containing the s3 bucket)
+- `MODEL_REPOSITORY=s3://mybucket/models/triton`
+- `AWS_DEFAULT_REGION=us-east-1`
 
 If necessary create the Openshift project.
 ```
@@ -32,9 +32,10 @@ oc create route edge ${TRITON_APP_NAME} --service=${TRITON_APP_NAME} --port=8000
 Basic model server test
 ```
 export INFERENCE_HOST=$(oc get route -n ${MODEL_SERVER_NAMESPACE} ${TRITON_APP_NAME} --template={{.spec.host}})
+```
+```
 curl https://${INFERENCE_HOST}/v2 | python -m json.tool
 ```
-
 Sample output
 ```
 {
@@ -105,7 +106,14 @@ cd application
 APP_NAMESPACE=clients
 INFERENCE_APP_NAME=fingerprint
 INFERENCE_HOST=$(oc get route triton -n ${MODEL_SERVER_NAMESPACE} --template={{.spec.host}})
+```
 
+Create a project.
+```
+oc new-project ${APP_NAMESPACE}
+```
+
+```
 oc new-app -n ${APP_NAMESPACE} --name=${INFERENCE_APP_NAME} --env=INFERENCE_HOST=${INFERENCE_HOST} --context-dir=/serving/application --strategy=docker https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git#bkoz-dev-v0.1
 ```
 
