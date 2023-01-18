@@ -117,7 +117,14 @@ oc new-project ${APP_NAMESPACE}
 oc new-app -n ${APP_NAMESPACE} --name=${INFERENCE_APP_NAME} --env=INFERENCE_HOST=${INFERENCE_HOST} --context-dir=/serving/application --strategy=docker https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git#bkoz-dev-v0.1
 ```
 
-Create a route.
+Create a route and visit the URL.
 ```
 oc create route edge ${INFERENCE_APP_NAME} --service=${INFERENCE_APP_NAME} --port=8080 -n ${APP_NAMESPACE}
 ```
+
+### Model Server Monitoring (Need to provide details)
+
+- Install the Prometheus and Grafana operators in the MODEL_SERVER_NAMESPACE.
+- Create a Prometheus Service Monitor for Triton
+- Create a Grafana data source that points to the Prometheus service host at port 9091
+- Import the sample Grafana Dashboard for Triton
