@@ -15,7 +15,7 @@ is_sourced() {
 usage(){
 echo "
 usage: 
-  . $0
+  source $0
   setup_demo
 "
 }
@@ -26,7 +26,7 @@ check_oc(){
   oc whoami || exit 0 
   oc status
 
-  sleep 6
+  sleep 4
 }
 
 get_aws_key(){
