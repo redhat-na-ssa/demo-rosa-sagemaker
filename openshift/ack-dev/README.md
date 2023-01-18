@@ -2,7 +2,9 @@
 
 ## Usage
 
-Build a developer env for ack-controllers
+Build: a developer environment for ack-controllers
+
+Purpose: limit the artifacts you have to install locally
 
 ```
 podman build -t ack-dev .
@@ -29,3 +31,8 @@ cd github.com/aws-controllers-k8s/code-generator/
 export SERVICE=s3
 ACK_GENERATE_OLM=true make build-controller SERVICE=$SERVICE
 ```
+
+## Links
+
+- https://aws-controllers-k8s.github.io/community/docs/contributor-docs/testing
+- https://aws-controllers-k8s.github.io/community/docs/contributor-docs/setup

@@ -4,7 +4,8 @@ FROM docker.io/ubuntu:22.04
 # A basic set of dependencies
 # https://aws-controllers-k8s.github.io/community/docs/contributor-docs/testing
 RUN apt update && \
-    apt-get install -y curl wget git make jq && \
+    apt-get install -y curl wget git make jq \
+    gcc sudo uuid-runtime && \
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash && \
     cd /usr/local/bin && \
     curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash && \
@@ -20,11 +21,10 @@ ENV GOCACHE=/go/src/.cache
 
 ENV PATH=${GOPATH}/bin:/opt/go/bin:$PATH
 
-RUN mkdir -p /go/{bin,src} && \ 
-    curl -L https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz | tar -C /opt/ -xz && \
-    go version
-
 WORKDIR $GOPATH/src
+
+# KLUDGE: operator-sdk not in path
+RUN ln -s /go/src/github.com/aws-controllers-k8s/code-generator/bin/operator-sdk /usr/local/bin/operator-sdk
 
 COPY init_repos.sh /usr/local/bin
 
