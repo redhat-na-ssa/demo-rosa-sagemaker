@@ -4,6 +4,8 @@ metadata:
   name: sagemaker-fingerprint-data
   annotations:
     gitUrl: https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
-    fix: openshift/ack-examples/adopted/adopt-sagemaker-fingerprint-data-cr.yml
+    fix: |
+      oc delete bucket sagemaker-fingerprint-data
+      oc apply -f openshift/ack-examples/adopted/adopt-sagemaker-fingerprint-data-cr.yml
 spec:
   name: sagemaker-fingerprint-data
