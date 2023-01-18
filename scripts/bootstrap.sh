@@ -88,10 +88,18 @@ setup_s3_data(){
   aws s3 sync "${SCRATCH}"/real "${S3_URL}"/real --quiet
 }
 
-get_aws_key
+setup_demo(){
+  get_aws_key
 
-setup_namespace
-setup_sagemaker
-setup_s3_data
-setup_odh
-setup_s2i_triton
+  setup_namespace
+  setup_sagemaker
+  setup_s3_data
+  setup_odh
+  setup_s2i_triton
+}
+
+echo "
+usage: 
+  . $0
+  setup_demo
+"
