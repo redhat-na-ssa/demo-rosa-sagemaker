@@ -4,7 +4,9 @@
 
 Build: a developer environment for ack-controllers
 
-Purpose: limit the artifacts you have to install locally
+Purpose: limit the artifacts you have to install locally; consistency
+
+TODO: contribute upstream
 
 ```
 podman build -t ack-dev .

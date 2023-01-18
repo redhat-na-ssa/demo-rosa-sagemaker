@@ -21,9 +21,13 @@ ENV GOCACHE=/go/src/.cache
 
 ENV PATH=${GOPATH}/bin:/opt/go/bin:$PATH
 
+RUN mkdir -p /go/{bin,src} && \ 
+    curl -L https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz | tar -C /opt/ -xz && \
+    go version
+
 WORKDIR $GOPATH/src
 
-# KLUDGE: operator-sdk not in path
+# kludge: operator-sdk not in path
 RUN ln -s /go/src/github.com/aws-controllers-k8s/code-generator/bin/operator-sdk /usr/local/bin/operator-sdk
 
 COPY init_repos.sh /usr/local/bin
