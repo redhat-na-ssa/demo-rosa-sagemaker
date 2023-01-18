@@ -110,7 +110,7 @@ setup_s3_data(){
 
   echo "Copying dataset into ${S3_URL}..."
 
-  aws s3 ls | grep ${S3_BUCKET} || echo error
+  aws s3 ls | grep ${S3_BUCKET} || aws s3 mb ${S3_BUCKET}
 
   aws s3 sync "${SCRATCH}"/train/left "${S3_URL}"/train/left --quiet && \
   aws s3 sync "${SCRATCH}"/train/right "${S3_URL}"/train/right --quiet && \
@@ -128,4 +128,4 @@ setup_demo(){
   setup_s2i_triton
 }
 
-is_sourced || usage
+is_sourced || usage && echo "run: setup_demo"
