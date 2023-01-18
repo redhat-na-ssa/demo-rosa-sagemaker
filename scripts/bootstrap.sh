@@ -94,7 +94,8 @@ setup_s2i_triton(){
 
 setup_s3_data(){
   SCRATCH=scratch
-  S3_URL=s3://sagemaker-fingerprint-data
+  S3_BUCKET=sagemaker-fingerprint-data
+  S3_URL=s3://${S3_BUCKET}
   DATA_SRC=https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
 
   which aws || return
@@ -108,6 +109,8 @@ setup_s3_data(){
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}"
 
   echo "Copying dataset into ${S3_URL}..."
+
+  aws s3 ls | grep ${S3_BUCKET} || echo error
 
   aws s3 sync "${SCRATCH}"/train/left "${S3_URL}"/train/left --quiet && \
   aws s3 sync "${SCRATCH}"/train/right "${S3_URL}"/train/right --quiet && \
