@@ -135,11 +135,7 @@ setup_repo(){
 # kludge: due to no CodeRepository CR
 
 cd /home/ec2-user/SageMaker
-git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
-
-# kludge: setup data
-[ ! -e demo-rosa-sagemaker/scratch ] && mkdir -p demo-rosa-sagemaker/scratch
-git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git demo-rosa-sagemaker/scratch/.raw
+git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git || echo "repo exists"
 
 chown ec2-user:ec2-user -R /home/ec2-user/SageMaker
 

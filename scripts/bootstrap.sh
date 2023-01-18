@@ -66,9 +66,32 @@ setup_s2i_triton(){
     MODEL_REPOSITORY=s3://sagemaker-fingerprint-models/models    
 }
 
+setup_s3_data(){
+  SCRATCH=scratch
+  S3_URL=s3://sagemaker-fingerprint-data
+  DATA_SRC=https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
+
+  which aws || return
+
+  echo "Pulling dataset from ${DATA_SRC} (gross)..."
+
+  git clone "${DATA_SRC}" "${SCRATCH}"/.raw >/dev/null 2>&1 || echo "exists"
+
+  tar -Jxf "${SCRATCH}"/.raw/left.tar.xz -C "${SCRATCH}"/train/ && \
+  tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
+  tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}"
+
+  echo "Copying dataset into ${S3_URL}..."
+
+  aws s3 sync "${SCRATCH}"/train/left "${S3_URL}"/train/left --quiet && \
+  aws s3 sync "${SCRATCH}"/train/right "${S3_URL}"/train/right --quiet && \
+  aws s3 sync "${SCRATCH}"/real "${S3_URL}"/real --quiet
+}
+
 get_aws_key
 
 setup_namespace
 setup_sagemaker
+setup_s3_data
 setup_odh
 setup_s2i_triton
