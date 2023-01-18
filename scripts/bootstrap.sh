@@ -71,9 +71,9 @@ setup_s2i_triton(){
   oc new-project ${NAMESPACE}
 
   oc -n ${NAMESPACE} new-build \
-    https://github.com/codekow/s2i-patch.git \
+    https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
     --name s2i-triton \
-    --context-dir /s2i-triton \
+    --context-dir /openshift/s2i-triton \
     --strategy docker
   
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
