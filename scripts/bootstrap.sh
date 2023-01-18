@@ -3,6 +3,23 @@
 
 NAMESPACE=fingerprint-id
 
+is_sourced() {
+  if [ -n "$ZSH_VERSION" ]; then 
+      case $ZSH_EVAL_CONTEXT in *:file:*) return 0;; esac
+  else  # Add additional POSIX-compatible shell names here, if needed.
+      case ${0##*/} in dash|-dash|bash|-bash|ksh|-ksh|sh|-sh) return 0;; esac
+  fi
+  return 1  # NOT sourced.
+}
+
+usage(){
+echo "
+usage: 
+  . $0
+  setup_demo
+"
+}
+
 check_oc(){
   echo "Are you on the right OCP cluster?"
 
@@ -108,8 +125,4 @@ setup_demo(){
   setup_s2i_triton
 }
 
-echo "
-usage: 
-  . $0
-  setup_demo
-"
+is_sourced || usage
