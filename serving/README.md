@@ -19,7 +19,15 @@ oc new-project ${MODEL_SERVER_NAMESPACE}
 
 Deploy Triton.
 ```
-oc new-app -n ${MODEL_SERVER_NAMESPACE} --name=${TRITON_APP_NAME} --context-dir=/s2i-triton --strategy docker --env=AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} --env=MODEL_REPOSITORY=${MODEL_REPOSITORY} https://github.com/codekow/s2i-patch.git
+oc new-app \
+  https://github.com/codekow/s2i-patch.git
+  -n ${MODEL_SERVER_NAMESPACE} \
+  --name=${TRITON_APP_NAME} \
+  --context-dir=/s2i-triton \
+  --strategy docker \
+  --env=AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
+  --env=MODEL_REPOSITORY=${MODEL_REPOSITORY} \
+  
 ```
 
 Create an https route for the model server.

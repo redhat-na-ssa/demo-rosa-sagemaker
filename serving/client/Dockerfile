@@ -1,9 +1,6 @@
-# Need to change to UBI
-FROM python:3.10.4
+FROM registry.access.redhat.com/ubi7/python-38
 
-WORKDIR /tmp
-
-COPY . /tmp
+COPY . /opt/app-root/src/
 
 RUN pip install -r requirements.txt
 
