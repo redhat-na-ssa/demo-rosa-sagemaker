@@ -1,0 +1,2 @@
+UPGRADE_PIP_TO_LATEST=true
+APP_FILE=app.py
