@@ -53,7 +53,7 @@ def predict(image):
     if p['outputs'][0]['data'][0] > 0.95:
       return_string = "Right Hand"
     else:
-        return_string = "Left Hand"
+      return_string = "Left Hand"
 
     return f"Prediction = {return_string}"
 

@@ -2,7 +2,8 @@ FROM registry.access.redhat.com/ubi7/python-38
 
 COPY . /opt/app-root/src/
 
-RUN pip install -r requirements.txt
+RUN pip --no-cache-dir install -U pip && \
+    pip --no-cache-dir install -r requirements.txt
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONIOENCODING=UTF-8
