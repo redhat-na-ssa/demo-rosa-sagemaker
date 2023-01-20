@@ -41,61 +41,6 @@ The training data and model could also be refactored to predict finger the print
 
 ![image](docs/fingerprint-model-arch.png)
 
-## Setup AWS Controllers for Kubernetes / ACK Operators
-
-Create AWS users (service principles)
-
-NOTICE: Keep output from `aws iam create-access-key ...`
-
-```
-# create s3 user
-aws iam create-user --user-name ack-user-s3
-aws iam create-access-key --user-name ack-user-s3
-
-# create sagemaker user
-aws iam create-user --user-name ack-user-sagemaker
-aws iam create-access-key --user-name ack-user-sagemaker
-```
-
-Assign Amazon Resource Name (ARN) policy to users.
-
-```
-# https://github.com/aws-controllers-k8s/s3-controller/blob/main/config/iam/recommended-policy-arn
-
-# attach user policy - s3
-aws iam attach-user-policy \
-    --user-name ack-user-s3 \
-    --policy-arn 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
-
-# attach user policy - sagemaker
-aws iam attach-user-policy \
-    --user-name ack-user-sagemaker \
-    --policy-arn 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
-
-aws iam attach-user-policy \
-    --user-name ack-user-sagemaker \
-    --policy-arn  'arn:aws:iam::aws:policy/AmazonEC2FullAccess'
-
-aws iam attach-user-policy \
-    --user-name ack-user-sagemaker \
-    --policy-arn  'arn:aws:iam::aws:policy/AmazonSageMakerFullAccess'
-
-```
-
-Use `oc apply -k` to install operators
-
-```
-# install ack-s3-controller
-oc apply -k openshift/ack-s3-controller/operator/overlays/alpha
-
-# install ack-sagemaker-controller
-oc apply -k openshift/ack-sagemaker-controller/operator/overlays/alpha
-```
-
-Use output from `aws iam create-access-key` to update values `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in the `ack-system` namespace:
-
-- ack-s3-user-secrets
-- ack-sagemaker-user-secrets
 
 ## Setup Custom Notebooks
 
@@ -150,32 +95,8 @@ With ROSA many of the security responsibilities that customers take on, can be m
 - [Red Hat OpenShift Service on AWS (ROSA)](https://aws.amazon.com/rosa/) is a managed Red Hat OpenShift service deployed and operated on AWS that allows customers to quickly and easily build, deploy, and manage Kubernetes applications in AWS Cloud. As an integrated AWS service, ROSA can be accessed on-demand from the AWS console with hourly billing, a single invoice for AWS deployments, integration with other AWS cloud-native services, and joint support from Red Hat and AWS.
 - [Open Data Hub](https://github.com/opendatahub-io) an open source project based on Kubeflow that provides open source AI tools for running large and distributed AI workloads on OpenShift Container Platform.
 
-## Prerequisites
-
-- [ROSA Cluster](https://cloud.redhat.com/blog/red-hat-openshift-service-on-aws-is-now-generally-available) with cluster-admin privileges in an available region [See Regions](https://docs.openshift.com/rosa/rosa_architecture/rosa_policy_service_definition/rosa-service-definition.html#rosa-sdpolicy-regions-az_rosa-service-definition).
-- AWS region needs with SageMaker in the [available services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/).
-- Access to the AWS Console to create an IAM Execution role for [Amazon SageMaker Python SDK](https://sagemaker.readthedocs.io/en/stable/). [How to create an IAM Execution role](https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html#sagemaker-roles-create-execution-role).
-
-- If not done by default, add 'sagemaker.amazonaws.com' to the ExecutionRole Trust policy.
-![image](./docs/rosa-iam-role.png)
-- An AWS S3 Storage Bucket with `sagemaker` in the name and an [Access Point]().
-- ODH Operator including: ODH Dashboard, JupyterHub, Jupyter Notebooks and ODH common. [How to deploy the Open Data Hub Operator]().
-- ROSA Project (or namespace). [How to create a project, add team members, set limits and quotas]().
-- Prior to launching a Jupyter Notebook, update the Jupyter Notebook Environment Variables:
-![image](./docs/rosa-notebook-env.png)
-
-```
-AWS_ACCESS_KEY_ID=<update>
-AWS_DEFAULT_REGION=<update>
-AWS_SECRET_ACCESS_KEY=<update>
-EXECUTION_ROLE_ARN=arn:aws:iam::<update>:role/AmazonSageMaker-ExecutionRole
-S3_BUCKET=<update>
-S3_ENDPOINT_URL=<update>
-```
-
-The notebook = ODH_SageMaker_SDK.ipynb
-
 # Links
 
-- [Sagemaker lifecycle config examples](https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples)
 - [Kaggle - Sokoto Coventry Fingerprint Dataset](https://www.kaggle.com/datasets/ruizgara/socofing)
+- [TensorFlow Image Classification](https://www.tensorflow.org/tutorials/images/classification#use_tensorflow_lite)
+- [TensorFlow Lite Image Classification](https://www.tensorflow.org/lite/models/modify/model_maker/image_classification#simple_end-to-end_example)
