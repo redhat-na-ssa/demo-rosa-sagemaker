@@ -77,7 +77,9 @@ if __name__ == "__main__":
         predict,
         gr.Image(type="pil"),
         "text",
+        analytics_enabled=False,
         flagging_options=["blurry", "incorrect", "other"],
+        flagging_dir="flagged",
         examples=sorted(
             [os.path.join("images/", file) for file in os.listdir("images")],
             key=os.path.getctime,
