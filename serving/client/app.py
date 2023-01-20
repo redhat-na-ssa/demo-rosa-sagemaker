@@ -49,9 +49,9 @@ def predict(image):
     logging.debug(f"predict(): resized = {resized}")
     np_image = np.asarray(resized)
 
-    endpoint = os.getenv("INFERENCE_ENDPOINT", 'http://localhost:8000')
+    endpoint = os.getenv("INFERENCE_ENDPOINT", "http://localhost:8000")
     logging.info(f"predict(): INFERENCE_ENDPOINT = {endpoint}")
-    
+
     r = make_prediction(np_image, 96, endpoint)
     p = ast.literal_eval(r.content.decode())
     logging.debug(f"predict(): outputs = {p}")
@@ -66,19 +66,23 @@ def predict(image):
 
 if __name__ == "__main__":
 
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     demo = gr.Interface(
         predict,
         gr.Image(type="pil"),
         "text",
         flagging_options=["blurry", "incorrect", "other"],
-        examples=[
-            os.path.join(os.path.abspath(""), "images/103__F_Left_index_finger.png"),
-            os.path.join(os.path.abspath(""), "images/275__F_Left_index_finger.png"),
-            os.path.join(os.path.abspath(""), "images/232__M_Right_index_finger.png"),
-            os.path.join(os.path.abspath(""), "images/504__M_Right_index_finger.png"),
-        ],
+        examples=sorted(
+            [os.path.join("images/", file) for file in os.listdir("images")],
+            key=os.path.getctime,
+        ),
+        # examples=[
+        #     os.path.join(os.path.abspath(""), "images/103__F_Left_index_finger.png"),
+        #     os.path.join(os.path.abspath(""), "images/275__F_Left_index_finger.png"),
+        #     os.path.join(os.path.abspath(""), "images/232__M_Right_index_finger.png"),
+        #     os.path.join(os.path.abspath(""), "images/504__M_Right_index_finger.png"),
+        # ],
         title="Fingerprint Classifier",
     )
 
