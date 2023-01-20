@@ -10,6 +10,8 @@ from PIL import Image
 import gradio as gr
 
 
+loglevel= os.getenv("LOGLEVEL", "INFO")
+
 def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     """
     Make a binary prediction from a single fingerprint image.
@@ -25,16 +27,19 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     # Build the request payload. The "name" must match the
     # input layer name of the model.
     #
-    req2 = {
+
+    fingerprint = {
         "inputs": [
             {
-                "name": "conv2d_12_input",
+                "name": "conv2d_13_input",
                 "shape": [1, img_size, img_size, 1],
                 "datatype": "FP32",
                 "data": img.tolist(),
             }
         ]
     }
+
+    req2 = fingerprint
 
     url = endpoint
     r = requests.post(url, json=req2)
@@ -66,7 +71,7 @@ def predict(image):
 
 if __name__ == "__main__":
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.loglevel)
 
     demo = gr.Interface(
         predict,

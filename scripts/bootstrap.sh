@@ -117,6 +117,29 @@ setup_s3_data(){
   aws s3 sync "${SCRATCH}"/real "${S3_URL}"/real --quiet
 }
 
+setup_gradio(){
+  NAMESPACE=example-triton
+  APP_NAME=gradio-client
+
+  oc project ${NAMESPACE}
+
+  oc new-app \
+  https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
+  --name ${APP_NAME} \
+  --strategy docker \
+  --context-dir /serving/client
+
+  oc expose service \
+    ${APP_NAME} \
+    --overrides='{"spec":{"tls":{"termination":"edge"}}}'
+
+  oc set env \
+    deploy/${APP_NAME} \
+    INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/fingerprint/infer \
+    LOGLEVEL=DEBUG
+
+}
+
 setup_demo(){
   check_oc
   get_aws_key
