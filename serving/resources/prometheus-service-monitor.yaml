@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: triton
+  name: triton
+spec:
+  endpoints:
+  - interval: 30s
+    path: /metrics
+    port: 8002-tcp
+  selector:
+    matchLabels:
+      app: triton

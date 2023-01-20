@@ -130,9 +130,12 @@ Create a route and visit the URL.
 oc create route edge ${INFERENCE_APP_NAME} --service=${INFERENCE_APP_NAME} --port=8080 -n ${APP_NAMESPACE}
 ```
 
-### Model Server Monitoring (Need to provide details)
+### Model Server Monitoring
 
 - Install the Prometheus and Grafana operators in the MODEL_SERVER_NAMESPACE.
 - Create a Prometheus Service Monitor for Triton
+  - `oc create -f serving/resources/prometheus-service-monitor.yaml -n ${MODEL_SERVER_NAMESPACE}`
 - Create a Grafana data source that points to the Prometheus service host at port 9091
-- Import the sample Grafana Dashboard for Triton
+  - `oc create -f serving/resources/grafana-prometheus-datasource.yaml -n ${MODEL_SERVER_NAMESPACE}`
+- Login to the Grafana UI and import the dashboard for Triton.
+  - `serving/grafana/triton.json`
