@@ -12,4 +12,4 @@ ENV PYTHONIOENCODING=UTF-8
 EXPOSE 8080
 
 ENTRYPOINT ["python"]
-CMD ["gradio.py"]
+CMD ["app.py"]
