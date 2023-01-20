@@ -66,7 +66,7 @@ def predict(image):
 
 if __name__ == "__main__":
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
 
     demo = gr.Interface(
         predict,
