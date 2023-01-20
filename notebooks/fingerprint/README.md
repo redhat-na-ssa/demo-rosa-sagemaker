@@ -1,5 +1,10 @@
 ## Fingerprint prediction
 
-The basic idea came from a Kaggle competition and the [Sokoto Coventry Fingerprint Dataset](https://www.kaggle.com/datasets/ruizgara/socofing). The goal is to train a model that can predict the gender, hand and finger from a fingerprint.
-
-![image](../../docs/basic-fingerprint-model.png)
+This notebook demonstrates:
+1. Setup
+1. Data Preparation (Label, Split, Augment, Optimize)
+1. Training (One Device, Mutli-Worker, Mirrored Multi-Worker, Acceleration)
+1. Hyperparameter Tuning (RandomSearch, Hyperband, BayesianOptimization, Sklearn)
+1. Evaluation
+1. Serialization
+1. Notebook Sample Prediction
