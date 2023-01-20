@@ -42,22 +42,6 @@ The training data and model could also be refactored to predict finger the print
 ![image](docs/fingerprint-model-arch.png)
 
 
-## Setup Custom Notebooks
-
-```
-oc apply -f openshift/sagemaker-notebook
-```
-
-## Examples
-
-[ACK Demo - Examples](openshift/ack-examples)
-
-[ACK Sagemaker - Examples](https://github.com/aws-controllers-k8s/sagemaker-controller/tree/main/samples)
-
-## Overview of this solution stack
-
-This basic demonstration requires configuring the environment manually, ingesting data from S3, training a basic TensorFlow Estimator model in a Jupyter notebook using SageMaker SDK. It versions and stores the trained model in S3. This is possible because the SageMaker SDK leverages an IAM Execution Roles to securely control access to AWS SageMaker resources and S3 storage for the data and model.
-
 ## Why use SageMaker SDK on OpenShift (ROSA)?
 
 Simply, use the tools you want for the job.
