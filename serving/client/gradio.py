@@ -10,14 +10,16 @@ from PIL import Image
 import gradio as gr
 
 
-def make_prediction(img: np.array, img_size: int, host: str) -> requests:
+def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     """
     Make a binary prediction from a single fingerprint image.
     Args:
      img - The request image array.
      img_size - The image height and width.
-     host - The hostname[:port] of the model service.
+     endpoint - The [http(s)]://hostname[:port] of the model api
     Returns: The model output prediction.
+
+    export INFERENCE_ENDPOINT='https://model-server-s3-example-triton.apps.cluster-rr8ch.rr8ch.sandbox2223.opentlc.com/v2/models/fingerprint/infer'
     """
     #
     # Build the request payload. The "name" must match the
@@ -34,7 +36,7 @@ def make_prediction(img: np.array, img_size: int, host: str) -> requests:
         ]
     }
 
-    url = f"https://{host}/v2/models/fingerprint/infer"
+    url = endpoint
     r = requests.post(url, json=req2)
     return r
 
@@ -46,9 +48,11 @@ def predict(image):
     resized = image.resize((96, 96)).convert("L")
     logging.debug(f"predict(): resized = {resized}")
     np_image = np.asarray(resized)
-    host = os.getenv("INFERENCE_HOST")
-    logging.info(f"predict(): INFERENCE_HOST = {host}")
-    r = make_prediction(np_image, 96, host)
+
+    endpoint = os.getenv("INFERENCE_ENDPOINT", 'http://localhost:8000')
+    logging.info(f"predict(): INFERENCE_ENDPOINT = {endpoint}")
+    
+    r = make_prediction(np_image, 96, endpoint)
     p = ast.literal_eval(r.content.decode())
     logging.debug(f"predict(): outputs = {p}")
 
