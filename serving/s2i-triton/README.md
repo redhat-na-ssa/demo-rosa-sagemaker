@@ -24,9 +24,9 @@ Build s2i image in Openshift
 
 ```
 oc new-build \
-  https://github.com/codekow/s2i-patch.git \
+  https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
   --name s2i-triton \
-  --context-dir /s2i-triton \
+  --context-dir /serving/s2i-triton \
   --strategy docker
 ```
 
@@ -38,10 +38,10 @@ Deploy model via git repo
 APP_NAME=example-triton-server
 
 oc new-app \
-  s2i-triton:latest~https://github.com/codekow/s2i-patch.git \
+  s2i-triton:latest~https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
   --name ${APP_NAME} \
   --strategy source \
-  --context-dir=/s2i-triton/models
+  --context-dir /serving/s2i-triton/models
 ```
 
 Deploy model via s3
@@ -135,6 +135,7 @@ oc exec deploy/${APP_NAME} -- curl -s localhost:8000/v2/models/< model name >
 
 ## Links
 
+- https://github.com/redhat-na-ssa/s2i-patch
 - https://github.com/triton-inference-server/server
 - https://github.com/openshift/source-to-image
 - https://github.com/sclorg/container-common-scripts
