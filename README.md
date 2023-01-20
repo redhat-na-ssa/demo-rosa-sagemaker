@@ -44,26 +44,11 @@ The training data and model could also be refactored to predict finger the print
 
 ## Why use SageMaker SDK on OpenShift (ROSA)?
 
-Simply, use the tools you want for the job.
-
 SageMaker is a fully managed machine learning service for AWS. With SageMaker, data scientists and developers can quickly develop / manage machine learning models.
 
-OpenShift is a best-in-class enterprise Kubernetes container platform. OpenShift provides a hybrid cloud solution from private data centers to multiple cloud vendors.
-
-[SageMaker Python SDK](https://sagemaker.readthedocs.io/en/stable/index.html) provides machine learning (ML) services integrated with industry leading storage technologies (s3).
-
-Machine learning tools include:
-  - [Frameworks](https://sagemaker.readthedocs.io/en/stable/frameworks/index.html) Apache MXNet, Chainer, Hugging Face, PyTorch, Reinforcement Learning, Scikit-Learn, SparkML Serving, Tensorflow, XGBoost
-  - [Built-in Algorithms](https://sagemaker.readthedocs.io/en/stable/algorithms/index.html) Estimators, Tabular, Text, Time-series, Unsupervised, Vision
-  - [Workflows]() Airflow workflows, AWS Step Functions, SageMaker Pipelines, SageMaker Lineage
-  - [Debugger](https://sagemaker.readthedocs.io/en/stable/amazon_sagemaker_debugger.html)
-  - [Feature Store](https://sagemaker.readthedocs.io/en/stable/amazon_sagemaker_featurestore.html)
-  - [Data pre and post processing](https://sagemaker.readthedocs.io/en/stable/amazon_sagemaker_processing.html)
-  - [Model Build CI/CD](https://sagemaker.readthedocs.io/en/stable/amazon_sagemaker_model_building_pipeline.html)
+Red Hat OpenShift is a best-in-class enterprise Kubernetes container platform. OpenShift provides a hybrid cloud solution from private data centers to multiple cloud vendors. Red Hat OpenShift makes it easier to build, operate, and scale globally, and on demand, through a familiar management interface. 
 
 [Red Hat OpenShift on AWS (ROSA)](https://aws.amazon.com/rosa/) leverages integrated AWS cloud services such as compute, storage, and networking to create a cloud agnostic platform to run containerized workloads.
-
-OpenShift makes it easier to build, operate, and scale globally, and on demand, through a familiar management interface. 
 
 With ROSA many of the security responsibilities that customers take on, can be managed by Red Hat:
   - Encryption
@@ -72,15 +57,19 @@ With ROSA many of the security responsibilities that customers take on, can be m
   - Patching and updating software
   - Securing the Linux Operating System
 
-## Explanation of components
-
-- [Amazon SageMaker Python SDK](https://sagemaker.readthedocs.io/en/stable/) is an open source library for training and deploying machine-learned models on Amazon SageMaker.
-- [AWS S3 Storage](https://aws.amazon.com/pm/serv-s3/) Object storage built to persist and retrieve any amount of data from anywhere.
-- [Red Hat OpenShift Service on AWS (ROSA)](https://aws.amazon.com/rosa/) is a managed Red Hat OpenShift service deployed and operated on AWS that allows customers to quickly and easily build, deploy, and manage Kubernetes applications in AWS Cloud. As an integrated AWS service, ROSA can be accessed on-demand from the AWS console with hourly billing, a single invoice for AWS deployments, integration with other AWS cloud-native services, and joint support from Red Hat and AWS.
-- [Open Data Hub](https://github.com/opendatahub-io) an open source project based on Kubeflow that provides open source AI tools for running large and distributed AI workloads on OpenShift Container Platform.
+Operators published by AWS and NVIDIA for Red Hat OpenShift improvev autonomy.
+- AWS Controller for Kubernetes Operators
+    - IAM
+    - EC2
+    - S3
+    - SageMaker
+- NVIDIA
+    - GPU Operator
 
 # Links
 
 - [Kaggle - Sokoto Coventry Fingerprint Dataset](https://www.kaggle.com/datasets/ruizgara/socofing)
 - [TensorFlow Image Classification](https://www.tensorflow.org/tutorials/images/classification#use_tensorflow_lite)
 - [TensorFlow Lite Image Classification](https://www.tensorflow.org/lite/models/modify/model_maker/image_classification#simple_end-to-end_example)
+- [AWS Operators for Kubernetes](https://operatorhub.io/?provider=%5B%22Amazon%22%5D)
+- [NVIDIA Operator](https://catalog.redhat.com/software/containers/nvidia/gpu-operator/5f9b0279ac3db90370a2128d)
