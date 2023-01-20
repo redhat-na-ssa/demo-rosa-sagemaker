@@ -1,24 +1,43 @@
-# ROSA running Open Data Hub Operator with SageMaker
+# Fingerprint attribute prediction model lifecycle 
 
-Demonstrate using ROSA to train models with AWS SageMaker SDK.
+## About the Demo
+This demo covers several topics important for extending Red Hat OpenShift to perform common data science tasks from: 
+- data ingestion from storage
+- data labeling infer class names
+- dataset splitting and performance tuning
+- model build from scratch
+- distributed model training strategies
+- hyperparameter tuning
+- model saving and compression
+- inference prototyping
+- model serving
+- inference monitoring
 
-# Use Case
+## Technology 
+- Red Hat OpenShift Container Platform
+- AWS Controllers for Kubernetes Operators - IAM, S3, EC2, and SageMaker
+- Red Hat OpenShift Data Science / Open Data Hub Operator
+- AWS SageMaker resources - Processingjob, Notbook Instance, Notebook Instance Configuration
+- EC2 Accelerated Instance types
+- NVIDIA Triton Inference Server
+- Gradio Web Interface
+- Prometheus Metrics and Grafana Dashboard
 
-The challenge: Can you accurately predict wether a fingerprint comes from a left or right hand?
+## About the data
+Sokoto Coventry Fingerprint Dataset (SOCOFing) is a biometric fingerprint database 
+designed for academic research purposes. Please see the accompanying GitHub https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data 
+that pulls the data from [Kaggle](https://www.kaggle.com/datasets/ruizgara/socofing).
+For a complete formal description and usage policy please refer to the following 
+paper: https://arxiv.org/abs/1807.10609.
 
-![image](docs/fingerprint_prediction.png)
+## Model training
 
-We will develop a model that predicts with high accuracy whether or not a given fingerprint comes from a left or right hand.
+The model is trained to predict from a given fingerprint if it comes from the:
+- left or right hand
+- male or female
+- index, middle, ring, little, or thumb
 
-There are 3 notebooks that:
-
-1. Train a baseline model with default parameters
-1. Hypertune a model for greater performance  
-1. Compress a model for an embedded device
-
-![image](docs/notebook_overview.png)
-
-The model is trained to predict from a given fingerprint if it comes from the left or right hand. The training data and model could also be refactored to predict finger the print is from and gender. Currently, only hand is predicted.
+The training data and model could also be refactored to predict finger the print is from and gender. Currently, only hand is predicted.
 
 ![image](docs/fingerprint-model-arch.png)
 
