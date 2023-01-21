@@ -78,31 +78,6 @@ setup_odh(){
     apply -f openshift/sagemaker-notebook
 }
 
-setup_s2i_triton(){
-  oc create ns ${NAMESPACE} || return 0
-
-  oc -n ${NAMESPACE} new-build \
-    https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
-    --name s2i-triton \
-    --context-dir /openshift/s2i-triton \
-    --strategy docker
-  
-  export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
-  
-  APP_NAME=model-server-s3
-
-  oc -n ${NAMESPACE} new-app \
-    s2i-triton:latest \
-    --name ${APP_NAME}
-
-  oc -n ${NAMESPACE} set env \
-    deploy/${APP_NAME} \
-    AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
-    AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-    MODEL_REPOSITORY=s3://sagemaker-fingerprint-models/models    
-}
-
 setup_s3_data(){
   SCRATCH=scratch
   S3_BUCKET=sagemaker-fingerprint-data
@@ -130,26 +105,56 @@ setup_s3_data(){
   aws s3 sync "${SCRATCH}"/real "${S3_URL}"/real --quiet
 }
 
+setup_s2i_triton(){
+  APP_NAME=model-server-s3
+  AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
+  
+  oc -n ${NAMESPACE} new-build \
+    https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
+    --name s2i-triton \
+    --context-dir /serving/s2i-triton \
+    --strategy docker
+  
+  oc -n ${NAMESPACE} new-app \
+    s2i-triton:latest \
+    --name ${APP_NAME} \
+    --allow-missing-imagestream-tags
+
+  oc -n ${NAMESPACE} set env \
+    deploy/${APP_NAME} \
+    AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
+    AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+    MODEL_REPOSITORY=s3://sagemaker-fingerprint-models/models    
+}
+
 setup_gradio(){
   APP_NAME=gradio-client
 
-  oc create ns ${NAMESPACE} || return 0
-
-  oc new-app \
+  oc -n ${NAMESPACE} new-app \
   https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
   --name ${APP_NAME} \
   --strategy docker \
   --context-dir /serving/client
 
-  oc expose service \
+  oc -n ${NAMESPACE} expose service \
     ${APP_NAME} \
     --overrides='{"spec":{"tls":{"termination":"edge"}}}'
 
-  oc set env \
+  oc -n ${NAMESPACE} set env \
     deploy/${APP_NAME} \
     INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/fingerprint/infer \
     LOGLEVEL=DEBUG
 
+}
+
+setup_serving(){
+  NAMESPACE=models
+  oc new-project $NAMESPACE || \
+    oc project $NAMESPACE
+ 
+  setup_s2i_triton
+  setup_gradio
 }
 
 setup_demo(){
@@ -161,10 +166,7 @@ setup_demo(){
   setup_s3_data
   setup_odh
 
-  NAMESPACE=models
-  
-  setup_s2i_triton
-  setup_gradio
+  setup_serving
 }
 
 is_sourced || usage && echo "run: setup_demo"

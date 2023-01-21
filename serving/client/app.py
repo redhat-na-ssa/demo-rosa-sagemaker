@@ -20,8 +20,6 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
      img_size - The image height and width.
      endpoint - The [http(s)]://hostname[:port] of the model api
     Returns: The model output prediction.
-
-    export INFERENCE_ENDPOINT='https://model-server-s3-example-triton.apps.cluster-rr8ch.rr8ch.sandbox2223.opentlc.com/v2/models/fingerprint/infer'
     """
     #
     # Build the request payload. The "name" must match the
@@ -31,7 +29,7 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     fingerprint = {
         "inputs": [
             {
-                "name": "conv2d_13_input",
+                "name": "conv2d_3_input",
                 "shape": [1, img_size, img_size, 1],
                 "datatype": "FP32",
                 "data": img.tolist(),
@@ -41,7 +39,7 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
 
     req2 = fingerprint
 
-    url = endpoint
+    url = endpoint + "/infer"
     r = requests.post(url, json=req2)
     return r
 
@@ -72,6 +70,15 @@ def predict(image):
 if __name__ == "__main__":
 
     logging.basicConfig(level=loglevel.upper())
+
+    local_dev = """
+    For local testing try:
+
+    export INFERENCE_ENDPOINT="https://model-server-s3-example-triton.apps.cluster-rr8ch.rr8ch.sandbox2223.opentlc.com/v2/models/fingerprint"
+    curl ${INFERENCE_ENDPOINT} | python -m json.tool
+    """
+
+    print(local_dev)
 
     demo = gr.Interface(
         predict,
