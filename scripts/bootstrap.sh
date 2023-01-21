@@ -14,8 +14,9 @@ is_sourced() {
 
 usage(){
 echo "
-usage: 
-  source $0
+You can run individual functions!
+
+example:
   setup_demo
 "
 }
@@ -34,6 +35,7 @@ get_aws_key(){
   # get aws creds
   export AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
   export AWS_SECRET_ACCESS_KEY=$(oc -n kube-system extract secret/aws-creds --keys=aws_secret_access_key --to=-)
+  export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-west-2}
 }
 
 setup_namespace(){
@@ -100,9 +102,9 @@ setup_s3_data(){
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}"
 
-  echo "Copying dataset into s3://${S3_BUCKET}..."
+  aws s3 ls | grep ${S3_BUCKET} || aws s3 mb s3://${S3_BUCKET}
 
-  aws s3 ls | grep ${S3_BUCKET} || aws s3 mb ${S3_BUCKET}
+  echo "Copying dataset into s3://${S3_BUCKET}..."
 
   aws s3 sync "${SCRATCH}"/train/left "s3://${S3_BUCKET}"/train/left --quiet && \
   aws s3 sync "${SCRATCH}"/train/right "s3://${S3_BUCKET}"/train/right --quiet && \
@@ -123,15 +125,19 @@ setup_triton(){
     --context-dir /serving/s2i-triton \
     --strategy docker
   
-  until oc wait bc/s2i-triton \
-    --for condition=established \
-    --timeout 9s >/dev/null 2>&1
+  until oc get istag \
+    s2i-triton:latest >/dev/null 2>&1
   do sleep 1
   done
   
   oc -n ${NAMESPACE} new-app \
     s2i-triton:latest \
     --name ${APP_NAME}
+  
+  oc -n ${NAMESPACE} create route \
+    edge ${APP_NAME} \
+    --service=${APP_NAME} \
+    --port=8000 -n ${NAMESPACE}
 
   oc -n ${NAMESPACE} set env \
     deploy/${APP_NAME} \
@@ -178,4 +184,4 @@ setup_demo(){
   setup_triton
 }
 
-is_sourced || usage && echo "run: setup_demo"
+is_sourced && usage || setup_demo
