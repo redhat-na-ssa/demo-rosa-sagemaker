@@ -3,7 +3,7 @@ import glob
 import os
 
 path_in = '.'
-path_out = 'dng'
+path_out = 'png'
 
 if not os.path.exists(path_out):
     os.makedirs(path_out)
