@@ -23,7 +23,8 @@ usage:
 check_oc(){
   echo "Are you on the right OCP cluster?"
 
-  oc whoami || exit 0 
+  oc whoami || exit 0
+  export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
   oc status
 
   sleep 4
@@ -79,9 +80,12 @@ setup_odh(){
 }
 
 setup_s3_data(){
+  export S3_BASE=sagemaker-fingerprint
+  export S3_POSTFIX=data
+  
+  export S3_BUCKET="${S3_BASE}-${S3_POSTFIX}-${UUID}"
+
   SCRATCH=scratch
-  S3_BUCKET=sagemaker-fingerprint-data
-  S3_URL=s3://${S3_BUCKET}
   DATA_SRC=https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
 
   which aws || return
@@ -96,24 +100,34 @@ setup_s3_data(){
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}"
 
-  echo "Copying dataset into ${S3_URL}..."
+  echo "Copying dataset into s3://${S3_BUCKET}..."
 
   aws s3 ls | grep ${S3_BUCKET} || aws s3 mb ${S3_BUCKET}
 
-  aws s3 sync "${SCRATCH}"/train/left "${S3_URL}"/train/left --quiet && \
-  aws s3 sync "${SCRATCH}"/train/right "${S3_URL}"/train/right --quiet && \
-  aws s3 sync "${SCRATCH}"/real "${S3_URL}"/real --quiet
+  aws s3 sync "${SCRATCH}"/train/left "s3://${S3_BUCKET}"/train/left --quiet && \
+  aws s3 sync "${SCRATCH}"/train/right "s3://${S3_BUCKET}"/train/right --quiet && \
+  aws s3 sync "${SCRATCH}"/real "s3://${S3_BUCKET}"/real --quiet
 }
 
-setup_s2i_triton(){
+setup_triton(){
   APP_NAME=model-server-s3
   AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
-  
+  NAMESPACE=models
+
+  oc new-project $NAMESPACE || \
+    oc project $NAMESPACE
+
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
     --name s2i-triton \
     --context-dir /serving/s2i-triton \
     --strategy docker
+  
+  until oc wait bc/s2i-triton \
+    --for condition=established \
+    --timeout 9s >/dev/null 2>&1
+  do sleep 1
+  done
   
   oc -n ${NAMESPACE} new-app \
     s2i-triton:latest \
@@ -124,12 +138,16 @@ setup_s2i_triton(){
     AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
     AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
     AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-    MODEL_REPOSITORY=s3://sagemaker-fingerprint-models/models    
+    MODEL_REPOSITORY=s3://"${S3_BUCKET}"/models    
 }
 
 setup_gradio(){
   APP_NAME=gradio-client
+  NAMESPACE=models
 
+  oc new-project $NAMESPACE || \
+    oc project $NAMESPACE
+  
   oc -n ${NAMESPACE} new-app \
   https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
   --name ${APP_NAME} \
@@ -147,15 +165,6 @@ setup_gradio(){
 
 }
 
-setup_serving(){
-  NAMESPACE=models
-  oc new-project $NAMESPACE || \
-    oc project $NAMESPACE
- 
-  setup_gradio
-  setup_s2i_triton
-}
-
 setup_demo(){
   check_oc
   get_aws_key
@@ -165,7 +174,8 @@ setup_demo(){
   setup_s3_data
   setup_odh
 
-  setup_serving
+  setup_gradio
+  setup_triton
 }
 
 is_sourced || usage && echo "run: setup_demo"
