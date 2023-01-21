@@ -5,7 +5,7 @@ COPY . /opt/app-root/src/
 
 RUN pip --no-cache-dir install -U pip && \
     pip --no-cache-dir install -r requirements.txt \
-    chmod g+rw . -R
+    chmod -R 775 .
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONIOENCODING=UTF-8
