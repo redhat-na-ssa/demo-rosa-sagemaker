@@ -50,11 +50,24 @@ setup_sagemaker(){
 }
 
 setup_odh(){
+  ODH_VERSION=1.3.0
   # install odh sub
   oc \
     apply -f openshift/odh/odh-v1.3-sub.yml
   
-  echo "NOTICE: Approve operator install"
+  # approve operator install
+  ODH_INSTALL=$(
+    oc -n openshift-operators \
+    get installplan \
+    -l operators.coreos.com/opendatahub-operator.openshift-operators | \
+      grep $ODH_VERSION | \
+      awk '{print $1}'
+  )
+
+  oc -n openshift-operators \
+    patch installplan/$ODH_INSTALL \
+    --type=merge \
+    --patch '{"spec":{"approved": true }}'
 
   # install odh resources
   oc -n "${NAMESPACE}" \
@@ -66,9 +79,7 @@ setup_odh(){
 }
 
 setup_s2i_triton(){
-  NAMESPACE=example-triton
-
-  oc new-project ${NAMESPACE}
+  oc create ns ${NAMESPACE} || return 0
 
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
@@ -104,6 +115,8 @@ setup_s3_data(){
 
   git clone "${DATA_SRC}" "${SCRATCH}"/.raw >/dev/null 2>&1 || echo "exists"
 
+  mkdir -p "${SCRATCH}"/train
+
   tar -Jxf "${SCRATCH}"/.raw/left.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}"
@@ -118,10 +131,9 @@ setup_s3_data(){
 }
 
 setup_gradio(){
-  NAMESPACE=example-triton
   APP_NAME=gradio-client
 
-  oc project ${NAMESPACE}
+  oc create ns ${NAMESPACE} || return 0
 
   oc new-app \
   https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
@@ -148,7 +160,11 @@ setup_demo(){
   setup_sagemaker
   setup_s3_data
   setup_odh
+
+  NAMESPACE=models
+  
   setup_s2i_triton
+  setup_gradio
 }
 
 is_sourced || usage && echo "run: setup_demo"
