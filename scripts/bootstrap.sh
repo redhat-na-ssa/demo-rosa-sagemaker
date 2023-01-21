@@ -117,8 +117,7 @@ setup_s2i_triton(){
   
   oc -n ${NAMESPACE} new-app \
     s2i-triton:latest \
-    --name ${APP_NAME} \
-    --allow-missing-imagestream-tags
+    --name ${APP_NAME}
 
   oc -n ${NAMESPACE} set env \
     deploy/${APP_NAME} \
@@ -143,7 +142,7 @@ setup_gradio(){
 
   oc -n ${NAMESPACE} set env \
     deploy/${APP_NAME} \
-    INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/fingerprint/infer \
+    INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/fingerprint \
     LOGLEVEL=DEBUG
 
 }
@@ -153,8 +152,8 @@ setup_serving(){
   oc new-project $NAMESPACE || \
     oc project $NAMESPACE
  
-  setup_s2i_triton
   setup_gradio
+  setup_s2i_triton
 }
 
 setup_demo(){
