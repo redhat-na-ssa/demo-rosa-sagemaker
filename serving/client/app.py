@@ -60,9 +60,9 @@ def predict(image):
     logging.debug(f"predict(): outputs = {p}")
 
     if p["outputs"][0]["data"][0] > 0.95:
-        return_string = "Right Hand"
-    else:
         return_string = "Left Hand"
+    else:
+        return_string = "Right Hand"
 
     return f"Prediction = {return_string}"
 
