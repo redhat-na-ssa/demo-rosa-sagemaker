@@ -17,6 +17,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#about-the-model">About The Model</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -47,16 +48,19 @@ Here's why:
 * If you are already using RHOCP for Apps, you should explore how easy it is to extend it for data science 
 * You shouldn't have to become a senior administrator to run a demo, we should provide the automation to get you up and demo'ing with much effort
 
-### About the ML demo
-This demo covers several topics important for extending Red Hat OpenShift to perform common data science tasks from
-data ingestion to inference monitoring.
+### About The Model
+The scenario we use was to train a model that could predict suspect attributes from an unknown fingerprint. 
+The model could help downselect possible suspects. Since we only had public data, the predictions are basic,
+but the possibilities are what we intend to inspire.
+
+This demo covers several topics across the lifecycle for extending Red Hat OpenShift to perform common 
+data science tasks from data ingestion to inference monitoring.
 
 See the <a href="#getting-started">Getting Started</a> to get started.
 
 ### Built With
 - [Red Hat OpenShift Self-Managed on AWS](https://www.redhat.com/en/resources/self-managed-openshift-sizing-subscription-guide)
 - [AWS SageMaker Notebooks](https://aws.amazon.com/pm/sagemaker/)
-  - alternatively, [Red Hat OpenShift Data Science Notebooks](https://www.redhat.com/en/resources/openshift-data-science-brief) or [Open Data Hub Notebooks](https://opendatahub.io/)
 - [NVIDIA Triton Inference Server](https://docs.nvidia.com/launchpad/ai/classification-openshift/latest/openshift-classification-triton-overview.html)
 - [Gradio User Interface](https://gradio.app/)
 - Operators published by AWS and NVIDIA for Red Hat OpenShift improve autonomy.

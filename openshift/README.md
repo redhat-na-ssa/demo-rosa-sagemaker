@@ -19,7 +19,6 @@ With ROSA many of the security responsibilities that customers take on, can be m
 Operators easily extend Red Hat OpenShift for data science:
 - [AWS Controller for Kubernetes Operators](https://operatorhub.io/?provider=%5B%22Amazon%22%5D): IAM, EC2, S3, SageMaker
 - [Hardware Acceleration](https://catalog.redhat.com/software/containers/nvidia/gpu-operator/5f9b0279ac3db90370a2128d)
-- [Red Hat OpenShift Data Science](https://catalog.redhat.com/software/operators/detail/63b85b573112fe5a95ee9a3a)
 
 ## Setup Custom Notebooks for ODH or RHODDS
 
