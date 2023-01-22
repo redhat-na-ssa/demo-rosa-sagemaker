@@ -1,75 +1,135 @@
-# Fingerprint attribute prediction model lifecycle 
+# Fingerprint Prediction on Red Hat OpenShift Container Platform
 
-## About the Demo
-This demo covers several topics important for extending Red Hat OpenShift to perform common data science tasks from: 
-- data ingestion from storage
-- data labeling infer class names
-- dataset splitting and performance tuning
-- model build from scratch
-- distributed model training strategies
-- hyperparameter tuning
-- model saving and compression
-- inference prototyping
-- model serving
-- inference monitoring
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a name="readme-top"></a>
+<!--
+*** Thank you for checking out this fingerprint prediction demonstration. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Don't forget to give the project a star!
+*** Thanks again! 
+-->
 
-## Technology 
-- Red Hat OpenShift Container Platform
-- AWS Controllers for Kubernetes Operators - IAM, S3, EC2, and SageMaker
-- Red Hat OpenShift Data Science / Open Data Hub Operator
-- AWS SageMaker resources - Processingjob, Notbook Instance, Notebook Instance Configuration
-- EC2 Accelerated Instance types
-- NVIDIA Triton Inference Server
-- Gradio Web Interface
-- Prometheus Metrics and Grafana Dashboard
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-## About the data
-Sokoto Coventry Fingerprint Dataset (SOCOFing) is a biometric fingerprint database 
-designed for academic research purposes. Please see the accompanying GitHub https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data 
-that pulls the data from [Kaggle](https://www.kaggle.com/datasets/ruizgara/socofing).
-For a complete formal description and usage policy please refer to the following 
-paper: https://arxiv.org/abs/1807.10609.
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-## Model training
+There are a few Machine Learning (ML) demos available on [Red Hat OpenShift (RHOCP)](https://developers.redhat.com/products/red-hat-openshift-data-science/getting-started?extIdCarryOver=true&sc_cid=7013a0000038Aa7AAE); 
+however, we didn't find one that really opened the toolbox for data science. 
+We want to create a realistic end-to-end demonstration that Data Scientists could experience and explore possibilities of the tools available.
 
-The model is trained to predict from a given fingerprint if it comes from the:
-- left or right hand
-- male or female
-- index, middle, ring, little, or thumb
+Here's why:
+* If you are already using RHOCP for Apps, you should explore how easy it is to extend it for data science 
+* You shouldn't have to become a senior administrator to run a demo, we should provide the automation to get you up and demo'ing with much effort
 
-The training data and model could also be refactored to predict finger the print is from and gender. Currently, only hand is predicted.
+### About the ML demo
+This demo covers several topics important for extending Red Hat OpenShift to perform common data science tasks from
+data ingestion to inference monitoring.
 
-![image](docs/fingerprint-model-arch.png)
+See the <a href="#getting-started">Getting Started</a> to get started.
 
+### Built With
+- [Red Hat OpenShift Self-Managed on AWS](https://www.redhat.com/en/resources/self-managed-openshift-sizing-subscription-guide)
+- [AWS SageMaker Notebooks](https://aws.amazon.com/pm/sagemaker/)
+  - alternatively, [Red Hat OpenShift Data Science Notebooks](https://www.redhat.com/en/resources/openshift-data-science-brief) or [Open Data Hub Notebooks](https://opendatahub.io/)
+- [NVIDIA Triton Inference Server](https://docs.nvidia.com/launchpad/ai/classification-openshift/latest/openshift-classification-triton-overview.html)
+- [Gradio User Interface](https://gradio.app/)
+- Operators published by AWS and NVIDIA for Red Hat OpenShift improve autonomy.
+  - [AWS Controller for Kubernetes Operators](https://operatorhub.io/?provider=%5B%22Amazon%22%5D): IAM, EC2, S3, SageMaker
+  - [Hardware Acceleration](https://catalog.redhat.com/software/containers/nvidia/gpu-operator/5f9b0279ac3db90370a2128d)
 
-## Why use SageMaker SDK on OpenShift (ROSA)?
+<!-- GETTING STARTED -->
+## Getting Started
 
-SageMaker is a fully managed machine learning service for AWS. With SageMaker, data scientists and developers can quickly develop / manage machine learning models.
+If you have the demo installed, start at the `./notebooks/fingerprint/model_train_s3_leftright.ipynb`.
+If not, see the <a href="#prerequisites">Prerequisites</a>.
 
-Red Hat OpenShift is a best-in-class enterprise Kubernetes container platform. OpenShift provides a hybrid cloud solution from private data centers to multiple cloud vendors. Red Hat OpenShift makes it easier to build, operate, and scale globally, and on demand, through a familiar management interface. 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-[Red Hat OpenShift on AWS (ROSA)](https://aws.amazon.com/rosa/) leverages integrated AWS cloud services such as compute, storage, and networking to create a cloud agnostic platform to run containerized workloads.
+### Prerequisites
 
-With ROSA many of the security responsibilities that customers take on, can be managed by Red Hat:
-  - Encryption
-  - Firewall and network configurations
-  - Identity and Access Management
-  - Patching and updating software
-  - Securing the Linux Operating System
+- [x] Red Hat OpenShift Cluster 4.9+
+- [x] Cluster admin permissions
+- [x] root `SSH` access to a bastion 
 
-Operators published by AWS and NVIDIA for Red Hat OpenShift improvev autonomy.
-- AWS Controller for Kubernetes Operators
-    - IAM
-    - EC2
-    - S3
-    - SageMaker
-- NVIDIA
-    - GPU Operator
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Links
+### Installation
 
+SSH to your bastion node with cluster-admin
+
+```commandline
+# clone this repo for the bootstrap scripts
+git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
+cd demo-rosa-sagemaker/
+
+# source the bootstrap scripts
+source ./scripts/bootstrap.sh
+
+# run the installation scripts
+setup_demo
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Intended to be run on Red Hat OpenShift Container Platform on AWS (self-managed).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ROADMAP -->
+## Roadmap
+- [ ] Add model training use cases to the notebook
+  - [ ] Gender: Male, Female
+  - [ ] Finger: Index, Middle, Ring, Little, Thumb
+- [ ] Add other serving options
+  - [ ] FastAPI
+  - [ ] ModelMesh with Intel OpenVINO
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contributing
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## License
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Acknowledgements
+
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 - [Kaggle - Sokoto Coventry Fingerprint Dataset](https://www.kaggle.com/datasets/ruizgara/socofing)
 - [TensorFlow Image Classification](https://www.tensorflow.org/tutorials/images/classification#use_tensorflow_lite)
 - [TensorFlow Lite Image Classification](https://www.tensorflow.org/lite/models/modify/model_maker/image_classification#simple_end-to-end_example)
-- [AWS Operators for Kubernetes](https://operatorhub.io/?provider=%5B%22Amazon%22%5D)
-- [NVIDIA Operator](https://catalog.redhat.com/software/containers/nvidia/gpu-operator/5f9b0279ac3db90370a2128d)

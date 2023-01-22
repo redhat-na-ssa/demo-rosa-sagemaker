@@ -1,8 +1,8 @@
-# Notes for SageMaker Resources
+## Why use SageMaker?
 
-## Sagemaker Notebook Lifecycle
-
-See https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples
+SageMaker is a fully managed machine learning service for AWS. With SageMaker, 
+data scientists and developers can quickly develop / manage machine learning models. 
+AWS Controllers for Kubernetes easily extend Red Hat OpenShift to manage AWS resources.
 
 ## Setup AWS Controllers for Kubernetes / ACK Operators
 
@@ -59,3 +59,7 @@ Use output from `aws iam create-access-key` to update values `AWS_ACCESS_KEY_ID`
 
 - ack-s3-user-secrets
 - ack-sagemaker-user-secrets
+
+## Sagemaker Notebook Lifecycle Configuration
+
+See https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples
