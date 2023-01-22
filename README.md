@@ -10,9 +10,9 @@
 *** Thanks again! 
 -->
 
-
-![sagemaker notebook](docs/sagemaker-notebook.png)
-![gradion fingerprint user interface](docs/gradio-fingerprint-ui.png)
+Training Notebook             |  Inference UI
+:-------------------------:|:-------------------------:
+![sagemaker notebook](docs/sagemaker-notebook.png) | ![gradion fingerprint user interface](docs/gradio-fingerprint-ui.png)
 
 <!-- TABLE OF CONTENTS -->
 <details>
