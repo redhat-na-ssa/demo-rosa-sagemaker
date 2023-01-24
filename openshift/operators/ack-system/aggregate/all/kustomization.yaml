@@ -8,13 +8,6 @@ bases:
   - ../../ack-s3-controller/operator/overlays/alpha
   - ../../ack-sagemaker-controller/operator/overlays/alpha
 
-resources:
-  - ack-ec2-user-config-cm.yaml
-  - ack-ecr-user-config-cm.yaml
-  - ack-iam-user-config-cm.yaml
-  - ack-s3-user-config-cm.yaml
-  - ack-sagemaker-user-config-cm.yaml
-
 # SingleNamespace InstallModeType not supported
 # patches:
 #   - patch: |-

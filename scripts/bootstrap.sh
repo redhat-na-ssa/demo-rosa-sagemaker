@@ -1,8 +1,6 @@
 #!/bin/bash
 #set -e
 
-NAMESPACE=fingerprint-id
-
 is_sourced() {
   if [ -n "$ZSH_VERSION" ]; then 
       case $ZSH_EVAL_CONTEXT in *:file:*) return 0;; esac
@@ -39,11 +37,37 @@ get_aws_key(){
 }
 
 setup_namespace(){
-  oc create ns "${NAMESPACE}" || return 0
+  NAMESPACE=${1}
+
+  oc new-project ${NAMESPACE} || \
+    oc project ${NAMESPACE}
+  
   sleep 3
 }
 
+setup_ack_system(){
+  NAMESPACE=ack-system
+
+  setup_namespace ${NAMESPACE}
+
+  oc apply -k openshift/operators/ack-s3-controller/operator/overlays/alpha
+  oc apply -k openshift/operators/ack-sagemaker-controller/operator/overlays/alpha
+
+  < openshift/operators/ack-s3-controller/operator/overlays/alpha/user-secrets-secret.yaml \
+    sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
+    oc -n ${NAMESPACE} apply -f -
+
+  < openshift/operators/ack-sagemaker-controller/operator/overlays/alpha/user-secrets-secret.yaml \
+    sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
+    oc -n ${NAMESPACE} apply -f -
+
+}
+
 setup_sagemaker(){
+NAMESPACE=fingerprint-id
+
+  setup_namespace ${NAMESPACE}
+
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
   
@@ -53,6 +77,7 @@ setup_sagemaker(){
 }
 
 setup_odh(){
+  NAMESPACE=fingerprint-id
   ODH_VERSION=1.3.0
   # install odh sub
   oc \
@@ -63,12 +88,12 @@ setup_odh(){
     oc -n openshift-operators \
     get installplan \
     -l operators.coreos.com/opendatahub-operator.openshift-operators | \
-      grep $ODH_VERSION | \
+      grep ${ODH_VERSION} | \
       awk '{print $1}'
   )
 
   oc -n openshift-operators \
-    patch installplan/$ODH_INSTALL \
+    patch installplan/${ODH_INSTALL} \
     --type=merge \
     --patch '{"spec":{"approved": true }}'
 
@@ -82,6 +107,7 @@ setup_odh(){
 }
 
 setup_s3_data(){
+  NAMESPACE=fingerprint-id
   export S3_BASE=sagemaker-fingerprint
   export S3_POSTFIX=data
   
@@ -112,12 +138,10 @@ setup_s3_data(){
 }
 
 setup_triton(){
-  APP_NAME=model-server-s3
-  AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
   NAMESPACE=models
+  APP_NAME=model-server-s3
 
-  oc new-project $NAMESPACE || \
-    oc project $NAMESPACE
+  setup_namespace ${NAMESPACE}
 
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
@@ -148,11 +172,11 @@ setup_triton(){
 }
 
 setup_gradio(){
-  APP_NAME=gradio-client
   NAMESPACE=models
+  APP_NAME=gradio-client
 
-  oc new-project $NAMESPACE || \
-    oc project $NAMESPACE
+  oc new-project ${NAMESPACE} || \
+    oc project ${NAMESPACE}
   
   oc -n ${NAMESPACE} new-app \
   https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
@@ -174,10 +198,10 @@ setup_gradio(){
 setup_demo(){
   check_oc
   get_aws_key
-
-  setup_namespace
-  setup_sagemaker
+  
   setup_s3_data
+  setup_ack_system
+  setup_sagemaker
   setup_odh
 
   setup_gradio
