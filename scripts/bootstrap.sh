@@ -168,6 +168,10 @@ setup_triton(){
     MODEL_REPOSITORY=s3://"${S3_BUCKET}"/models    
 }
 
+setup_grafana(){
+  oc apply -k openshift/operators/grafana-operator/overlays/models
+}
+
 setup_gradio(){
   NAMESPACE=models
   APP_NAME=gradio-client
