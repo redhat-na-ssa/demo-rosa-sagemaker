@@ -13,3 +13,10 @@ patches:
       - op: replace
         path: /spec/channel
         value: 'alpha'
+  - target:
+      kind: ConfigMap
+      name: ack-controller-user-config
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: 'ack-ec2-user-config'

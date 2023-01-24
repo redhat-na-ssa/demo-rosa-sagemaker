@@ -50,17 +50,14 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  oc apply -k openshift/operators/ack-s3-controller/operator/overlays/alpha
-  oc apply -k openshift/operators/ack-sagemaker-controller/operator/overlays/alpha
+  for type in ec2 ecr iam s3 sagemaker
+  do
+    oc apply -k openshift/operators/ack-${type}-controller/operator/overlays/alpha
 
-  < openshift/operators/ack-s3-controller/operator/overlays/alpha/user-secrets-secret.yaml \
-    sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
-    oc -n ${NAMESPACE} apply -f -
-
-  < openshift/operators/ack-sagemaker-controller/operator/overlays/alpha/user-secrets-secret.yaml \
-    sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
-    oc -n ${NAMESPACE} apply -f -
-
+    < openshift/operators/ack-${type}-controller/operator/overlays/alpha/user-secrets-secret.yaml \
+      sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
+      oc -n ${NAMESPACE} apply -f -
+  done
 }
 
 setup_sagemaker(){
