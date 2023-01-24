@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../../ack-ec2-controller/operator/overlays/alpha
+  - ../../ack-ecr-controller/operator/overlays/alpha
+  - ../../ack-iam-controller/operator/overlays/alpha
+  - ../../ack-s3-controller/operator/overlays/alpha
+  - ../../ack-sagemaker-controller/operator/overlays/alpha
+
+resources:
+  - ack-ec2-user-config-cm.yaml
+  - ack-ecr-user-config-cm.yaml
+  - ack-iam-user-config-cm.yaml
+  - ack-s3-user-config-cm.yaml
+  - ack-sagemaker-user-config-cm.yaml
+
+# SingleNamespace InstallModeType not supported
+# patches:
+#   - patch: |-
+#       - op: add
+#         path: /spec/targetNamespaces
+#         value:
+#           - aws-ops
+#     target:
+#       kind: OperatorGroup
+#       name: ack-operatorgroup

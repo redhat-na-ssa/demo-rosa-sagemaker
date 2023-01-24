@@ -8,15 +8,8 @@ bases:
 patches:
   - target:
       kind: Subscription
-      name: ack-sagemaker-controller
+      name: ack-ec2-controller
     patch: |-
       - op: replace
         path: /spec/channel
         value: 'alpha'
-  - target:
-      kind: ConfigMap
-      name: ack-controller-user-config
-    patch: |-
-      - op: replace
-        path: /metadata/name
-        value: 'ack-sagemaker-user-config'
