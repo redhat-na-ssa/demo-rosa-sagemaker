@@ -172,6 +172,10 @@ setup_grafana(){
   oc apply -k openshift/operators/grafana-operator/overlays/models
 }
 
+setup_prometheus(){
+  oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
+}
+
 setup_gradio(){
   NAMESPACE=models
   APP_NAME=gradio-client
