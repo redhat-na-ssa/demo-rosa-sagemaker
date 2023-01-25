@@ -26,6 +26,8 @@ check_oc(){
   export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
   oc status
 
+  echo "UUID: ${UUID}"
+
   sleep 4
 }
 
