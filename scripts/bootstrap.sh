@@ -28,7 +28,7 @@ setup_venv(){
   python3 -m venv venv
   source venv/bin/activate
   pip install -q -U pip
-  pip install -q aws
+  pip install -q awscli
 
   check_venv || usage
 }
@@ -72,9 +72,9 @@ setup_ack_system(){
 
   for type in ec2 ecr iam s3 sagemaker
   do
-    oc apply -k openshift/operators/ack-${type}-controller/operator/overlays/alpha
+    oc apply -k openshift/operators/ack-${type}-controller/overlays/alpha
 
-    < openshift/operators/ack-${type}-controller/operator/overlays/alpha/user-secrets-secret.yaml \
+    < openshift/operators/ack-${type}-controller/overlays/alpha/user-secrets-secret.yaml \
       sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
       oc -n ${NAMESPACE} apply -f -
   done
