@@ -220,7 +220,7 @@ setup_prometheus(){
 delete_demo(){
   NAMESPACE=fingerprint-id
   oc -n ${NAMESPACE} \
-    delete all,bucket,notebookinstance,kfdef --all --wait
+    delete all,bucket,notebookinstance,notebookinstancelifecycleconfig,kfdef --all --wait
 
   NAMESPACE=models
   oc -n ${NAMESPACE} \
