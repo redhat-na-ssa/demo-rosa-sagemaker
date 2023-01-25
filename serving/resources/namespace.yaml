@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    openshift.io/description: Model Serving
+    openshift.io/display-name: Model Serving
+  name: models

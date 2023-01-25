@@ -39,10 +39,9 @@ get_aws_key(){
 setup_namespace(){
   NAMESPACE=${1}
 
-  oc new-project ${NAMESPACE} || \
+  oc new-project ${NAMESPACE} 2>/dev/null || \
     oc project ${NAMESPACE}
-  
-  sleep 3
+
 }
 
 setup_ack_system(){
@@ -108,7 +107,7 @@ setup_s3_data(){
   export S3_BASE=sagemaker-fingerprint
   export S3_POSTFIX=data
   
-  export S3_BUCKET="${S3_BASE}-${S3_POSTFIX}-${UUID}"
+  export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
 
   SCRATCH=scratch
   DATA_SRC=https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
@@ -119,19 +118,22 @@ setup_s3_data(){
 
   git clone "${DATA_SRC}" "${SCRATCH}"/.raw >/dev/null 2>&1 || echo "exists"
 
-  mkdir -p "${SCRATCH}"/train
+  mkdir -p "${SCRATCH}"/{train,models}
 
   tar -Jxf "${SCRATCH}"/.raw/left.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
-  tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}"
+  tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}" && \
+  tar -Jxf "${SCRATCH}"/.raw/model-v1-lite.tar.xz -C "${SCRATCH}/"models
 
   aws s3 ls | grep ${S3_BUCKET} || aws s3 mb s3://${S3_BUCKET}
 
-  echo "Copying dataset into s3://${S3_BUCKET}..."
+  echo "Copying dataset into s3://${S3_BUCKET_DATA}..."
 
-  aws s3 sync "${SCRATCH}"/train/left "s3://${S3_BUCKET}"/train/left --quiet && \
-  aws s3 sync "${SCRATCH}"/train/right "s3://${S3_BUCKET}"/train/right --quiet && \
-  aws s3 sync "${SCRATCH}"/real "s3://${S3_BUCKET}"/real --quiet
+  aws s3 sync "${SCRATCH}"/train/left "s3://${S3_BUCKET_DATA}"/train/left --quiet && \
+  aws s3 sync "${SCRATCH}"/train/right "s3://${S3_BUCKET_DATA}"/train/right --quiet && \
+  aws s3 sync "${SCRATCH}"/real "s3://${S3_BUCKET_DATA}"/real --quiet && \
+  aws s3 sync "${SCRATCH}"/models "s3://${S3_BUCKET_DATA}"/models --quiet
+
 }
 
 setup_triton(){
@@ -140,13 +142,17 @@ setup_triton(){
 
   setup_namespace ${NAMESPACE}
 
+  oc -n ${NAMESPACE} \
+    apply -f serving/resources
+
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
     --name s2i-triton \
     --context-dir /serving/s2i-triton \
     --strategy docker
   
-  until oc get istag \
+  until oc -n ${NAMESPACE} \
+    get istag \
     s2i-triton:latest >/dev/null 2>&1
   do sleep 1
   done
@@ -165,29 +171,21 @@ setup_triton(){
     AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
     AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
     AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-    MODEL_REPOSITORY=s3://"${S3_BUCKET}"/models    
-}
+    MODEL_REPOSITORY=s3://"${S3_BUCKET}"/models
 
-setup_grafana(){
-  oc apply -k openshift/operators/grafana-operator/overlays/models
-}
-
-setup_prometheus(){
-  oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
 }
 
 setup_gradio(){
   NAMESPACE=models
   APP_NAME=gradio-client
 
-  oc new-project ${NAMESPACE} || \
-    oc project ${NAMESPACE}
+  setup_namespace ${NAMESPACE}
   
   oc -n ${NAMESPACE} new-app \
-  https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
-  --name ${APP_NAME} \
-  --strategy docker \
-  --context-dir /serving/client
+    https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
+    --name ${APP_NAME} \
+    --strategy docker \
+    --context-dir /serving/client
 
   oc -n ${NAMESPACE} expose service \
     ${APP_NAME} \
@@ -200,6 +198,31 @@ setup_gradio(){
 
 }
 
+setup_grafana(){
+  oc apply -k openshift/operators/grafana-operator/overlays/models
+}
+
+setup_prometheus(){
+  oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
+}
+
+delete_demo(){
+  NAMESPACE=fingerprint-id
+
+  oc -n ${NAMESPACE} \
+    delete bucket,notebookinstance --all --wait
+
+  NAMESPACE=models
+
+  oc -n ${NAMESPACE} \
+    delete grafana,prometheus --all --wait
+
+  for ns in ack-system fingerprint-id grafana models prometheus
+  do
+    oc delete project "${ns}"
+  done
+}
+
 setup_demo(){
   check_oc
   get_aws_key
@@ -209,8 +232,11 @@ setup_demo(){
   setup_sagemaker
   setup_odh
 
+  setup_grafana
+  setup_prometheus
   setup_gradio
-  setup_triton
+  setup_triton &
+    echo "run: fg"
 }
 
 is_sourced && usage || setup_demo
