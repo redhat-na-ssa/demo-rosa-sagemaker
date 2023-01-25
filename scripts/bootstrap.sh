@@ -1,6 +1,20 @@
 #!/bin/bash
 #set -e
 
+usage(){
+  # echo "
+  # setup virtualenv:
+  # python3 -m venv venv
+  # "
+
+echo "
+You can run individual functions!
+
+example:
+  setup_demo
+"
+}
+
 is_sourced() {
   if [ -n "$ZSH_VERSION" ]; then 
       case $ZSH_EVAL_CONTEXT in *:file:*) return 0;; esac
@@ -10,13 +24,18 @@ is_sourced() {
   return 1  # NOT sourced.
 }
 
-usage(){
-echo "
-You can run individual functions!
+setup_venv(){
+  python3 -m venv venv
+  source venv/bin/activate
+  pip install -q -U pip
+  pip install -q aws
 
-example:
-  setup_demo
-"
+  check_venv || usage
+}
+
+check_venv(){
+  # activate python venv
+  [ -d venv ] && . venv/bin/activate || setup_venv
 }
 
 check_oc(){
@@ -235,6 +254,7 @@ delete_demo(){
 }
 
 setup_demo(){
+  check_venv
   check_oc
   get_aws_key
   
