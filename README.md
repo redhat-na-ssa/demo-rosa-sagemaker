@@ -84,6 +84,7 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 - [x] Red Hat OpenShift Cluster 4.9+
 - [x] Cluster admin permissions
 - [x] `oc` cli installed
+- [x] `aws` cli installed
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
