@@ -104,6 +104,7 @@ setup_odh(){
 
 setup_s3_data(){
   NAMESPACE=fingerprint-id
+  export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
   export S3_BASE=sagemaker-fingerprint
   export S3_POSTFIX=data
   
@@ -123,9 +124,9 @@ setup_s3_data(){
   tar -Jxf "${SCRATCH}"/.raw/left.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}" && \
-  tar -Jxf "${SCRATCH}"/.raw/model-v1-lite.tar.xz -C "${SCRATCH}/"models
+  tar -Jxf "${SCRATCH}"/.raw/model-v1-full.tar.xz -C "${SCRATCH}"/models
 
-  aws s3 ls | grep ${S3_BUCKET} || aws s3 mb s3://${S3_BUCKET}
+  aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
 
   echo "Copying dataset into s3://${S3_BUCKET_DATA}..."
 
@@ -171,8 +172,18 @@ setup_triton(){
     AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
     AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
     AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-    MODEL_REPOSITORY=s3://"${S3_BUCKET}"/models
+    MODEL_REPOSITORY=s3://"${S3_BUCKET_DATA}"/models
 
+}
+
+setup_triton_metrics(){
+  NAMESPACE=models
+  APP_NAME=model-server-s3
+
+  setup_namespace ${NAMESPACE}
+
+  oc -n ${NAMESPACE} \
+    apply -f serving/resources
 }
 
 setup_gradio(){
@@ -208,12 +219,10 @@ setup_prometheus(){
 
 delete_demo(){
   NAMESPACE=fingerprint-id
-
   oc -n ${NAMESPACE} \
-    delete bucket,notebookinstance --all --wait
+    delete all,bucket,notebookinstance,kfdef --all --wait
 
   NAMESPACE=models
-
   oc -n ${NAMESPACE} \
     delete grafana,prometheus --all --wait
 
@@ -235,6 +244,7 @@ setup_demo(){
   setup_grafana
   setup_prometheus
   setup_gradio
+  setup_triton_metrics
   setup_triton &
     echo "run: fg"
 }
