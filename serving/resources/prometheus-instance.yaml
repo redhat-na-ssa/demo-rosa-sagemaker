@@ -1,0 +1,5 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: models
+spec: {}

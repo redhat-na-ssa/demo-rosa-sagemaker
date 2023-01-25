@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    openshift.io/description: Fingerprint (Demo)
+    openshift.io/display-name: Fingerprint (Demo)
+  name: fingerprint-id

@@ -13,7 +13,10 @@ patches:
       - op: replace
         path: /spec/channel
         value: 'alpha'
-
-resources:
-- user-config-cm.yaml
-- user-secrets-secret.yaml
+  - target:
+      kind: ConfigMap
+      name: ack-controller-user-config
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: 'ack-sagemaker-user-config'
