@@ -267,8 +267,7 @@ setup_demo(){
   setup_prometheus
   setup_gradio
   setup_triton_metrics
-  setup_triton &
-    echo "run: fg"
+  setup_triton
 }
 
 is_sourced && usage || setup_demo
