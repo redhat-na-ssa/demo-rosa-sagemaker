@@ -173,6 +173,7 @@ setup_triton(){
     --context-dir /serving/s2i-triton \
     --strategy docker
   
+  echo "Be patient, this may take a while (10 min)..."
   until oc -n ${NAMESPACE} \
     get istag \
     s2i-triton:latest >/dev/null 2>&1
