@@ -123,17 +123,20 @@ setup_odh(){
     apply -f openshift/sagemaker-notebook
 }
 
-setup_s3_data(){
+setup_s3(){
   NAMESPACE=fingerprint-id
+
   export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
   export S3_BASE=sagemaker-fingerprint
   export S3_POSTFIX=data
-  
+
   export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
 
   SCRATCH=scratch
   DATA_SRC=https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
+}
 
+setup_s3_transfer(){
   which aws || return
 
   echo "Pulling dataset from ${DATA_SRC} (gross)..."
@@ -163,9 +166,6 @@ setup_triton(){
   APP_NAME=model-server-s3
 
   setup_namespace ${NAMESPACE}
-
-  oc -n ${NAMESPACE} \
-    apply -f serving/resources
 
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
@@ -233,10 +233,16 @@ setup_gradio(){
 
 setup_grafana(){
   oc apply -k openshift/operators/grafana-operator/overlays/models
+  until oc get crd grafanas.integreatly.org >/dev/null 2>&1
+    do sleep 1
+  done
 }
 
 setup_prometheus(){
   oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
+  until oc get crd prometheuses.monitoring.coreos.com >/dev/null 2>&1
+    do sleep 1
+  done
 }
 
 delete_demo(){
@@ -259,7 +265,11 @@ setup_demo(){
   check_oc
   get_aws_key
   
-  setup_s3_data
+  setup_s3
+
+  echo "Running s3 transfer in background..."
+  setup_s3_transfer &
+  
   setup_ack_system
   setup_sagemaker
   setup_odh
