@@ -38,30 +38,23 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+##  The Project
 ![](docs/ml-lifecycle-sm-ocp.png)
 
-There are a few Machine Learning (ML) demos available on [Red Hat OpenShift (RHOCP)](https://developers.redhat.com/products/red-hat-openshift-data-science/getting-started?extIdCarryOver=true&sc_cid=7013a0000038Aa7AAE); 
-however, we didn't find one that really opened the toolbox for data science. 
-We want to create a realistic end-to-end demonstration that Data Scientists could experience and explore possibilities of the tools available.
+Explore the data science toolbox that are in reach when you have Red Hat OpenShift on AWS. 
 
-Here's why:
-* If you are already using RHOCP for Apps, you should explore how easy it is to extend it for data science 
-* You shouldn't have to become a senior administrator to run a demo, we should provide the automation to get you up and demo'ing with much effort
-
-### About The Scenario
+### The Scenario
 The scenario we use was to train a model that could predict suspect attributes from an unknown fingerprint. 
-For example, In the data center or in the field, this model could help downselect possible suspects given an unseen fingerprint. 
+For example, in the data center or in the field, this model could help down-select possible suspects given an unseen fingerprint. 
 Since we only had public data, the predictions are basic, but the possibilities are what we intend to inspire.
 
-### About the demo
+### The demo
 This demo covers several topics across the lifecycle for extending Red Hat OpenShift to perform common 
 data science tasks from data ingestion to inference monitoring.
 
 Training Notebook             |  Inference UI
 :-------------------------:|:-------------------------:
 ![sagemaker notebook](docs/sagemaker-notebook.png) | ![gradion fingerprint user interface](docs/gradio-fingerprint-ui.png)
-
 
 See the <a href="#getting-started">Getting Started</a> to get started.
 
@@ -70,9 +63,8 @@ See the <a href="#getting-started">Getting Started</a> to get started.
 - [AWS SageMaker Notebooks](https://aws.amazon.com/pm/sagemaker/)
 - [NVIDIA Triton Inference Server](https://docs.nvidia.com/launchpad/ai/classification-openshift/latest/openshift-classification-triton-overview.html)
 - [Gradio User Interface](https://gradio.app/)
-- Operators published by AWS and NVIDIA for Red Hat OpenShift improve autonomy.
-  - [AWS Controller for Kubernetes Operators](https://operatorhub.io/?provider=%5B%22Amazon%22%5D): IAM, EC2, S3, SageMaker
-  - [Hardware Acceleration](https://catalog.redhat.com/software/containers/nvidia/gpu-operator/5f9b0279ac3db90370a2128d)
+- [AWS Controller for Kubernetes Operators](https://operatorhub.io/?provider=%5B%22Amazon%22%5D): IAM, EC2, S3, SageMaker
+- [Hardware Acceleration](https://catalog.redhat.com/software/containers/nvidia/gpu-operator/5f9b0279ac3db90370a2128d)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -84,54 +76,58 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 
 ### Prerequisites
 
-- [x] Red Hat OpenShift Cluster 4.9+
+- [x] Red Hat OpenShift Cluster 4.10+
 - [x] Cluster admin permissions
-- [x] `oc` cli installed
-- [x] `aws` cli installed
+- [x] `oc` cli installed locally
+- [x] `python36` cli installed
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Installation
 
-SSH to your bastion node with cluster-admin
-
 ```commandline
+# SSH to your cluster node with cluster-admin
+oc login --token=sha256~<your_token>
+
 # clone this repo for the bootstrap scripts
 git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
 cd demo-rosa-sagemaker/
 
-# run bootstrap
-scripts/bootstrap.sh
-```
+# run bootstrap to provision the demo on your cluster
+./scripts/bootstrap.sh
 
-```
-# source the bootstrap scripts
-# if you want to run individual modules
-
-# run the installation scripts
+# optionally, you can `source ./scripts/bootstrap.sh` and run commands individually, i.e.
 setup_demo
-
-# delete demo
 delete_demo
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
-## Usage
 
-Intended to be run on Red Hat OpenShift Container Platform on AWS (self-managed). Alternatively, Red Hat OpenShift on AWS (managed).
+### Intended Usage
+
+Intended to be run on Red Hat OpenShift Container Platform on AWS (self-managed). Alternatively, Red Hat OpenShift on AWS (managed). 
+Extend RHOCP with AWS capabilities.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
+
 ## Roadmap
-- [ ] Add model training use cases to the notebook
-  - [ ] Gender: Male, Female
-  - [ ] Finger: Index, Middle, Ring, Little, Thumb
-- [ ] Add other serving options
-  - [ ] FastAPI
-  - [ ] ModelMesh with Intel OpenVINO
+- [ ] create branch `RHODS`
+  - use RHODS notebook
+  - use elyra
+  - ModelMesh with Intel OpenVINO for serving
+- [ ] create branch `ODH`
+  - use ODH notebook
+  - use airflow
+  - use FastAPI for serving
+- [ ] create branch `edge`
+  - deploy the tflite model to edge device with Ansible
+  - test fingerprint
+- [ ] create branch `djl`
+  - use djl.ai for model dev
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
