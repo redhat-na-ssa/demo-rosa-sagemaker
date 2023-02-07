@@ -109,9 +109,13 @@ NAMESPACE=fingerprint-id
 setup_odh(){
   NAMESPACE=fingerprint-id
   ODH_VERSION=1.3.0
+
   # install odh sub
-  oc \
-    apply -f openshift/odh/odh-v1.3-sub.yml
+  oc -n "${NAMESPACE}" \
+    apply -f openshift/odh/odh-v1.3.0-sub.yml
+  
+  # kludge: just sleep
+  sleep 10
   
   # approve operator install
   ODH_INSTALL=$(
