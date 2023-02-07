@@ -10,10 +10,6 @@
 *** Thanks again! 
 -->
 
-Training Notebook             |  Inference UI
-:-------------------------:|:-------------------------:
-![sagemaker notebook](docs/sagemaker-notebook.png) | ![gradion fingerprint user interface](docs/gradio-fingerprint-ui.png)
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -43,6 +39,7 @@ Training Notebook             |  Inference UI
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+![](docs/ml-lifecycle-sm-ocp.png)
 
 There are a few Machine Learning (ML) demos available on [Red Hat OpenShift (RHOCP)](https://developers.redhat.com/products/red-hat-openshift-data-science/getting-started?extIdCarryOver=true&sc_cid=7013a0000038Aa7AAE); 
 however, we didn't find one that really opened the toolbox for data science. 
@@ -52,13 +49,19 @@ Here's why:
 * If you are already using RHOCP for Apps, you should explore how easy it is to extend it for data science 
 * You shouldn't have to become a senior administrator to run a demo, we should provide the automation to get you up and demo'ing with much effort
 
-### About The Model
+### About The Scenario
 The scenario we use was to train a model that could predict suspect attributes from an unknown fingerprint. 
-The model could help downselect possible suspects. Since we only had public data, the predictions are basic,
-but the possibilities are what we intend to inspire.
+For example, In the data center or in the field, this model could help downselect possible suspects given an unseen fingerprint. 
+Since we only had public data, the predictions are basic, but the possibilities are what we intend to inspire.
 
+### About the demo
 This demo covers several topics across the lifecycle for extending Red Hat OpenShift to perform common 
 data science tasks from data ingestion to inference monitoring.
+
+Training Notebook             |  Inference UI
+:-------------------------:|:-------------------------:
+![sagemaker notebook](docs/sagemaker-notebook.png) | ![gradion fingerprint user interface](docs/gradio-fingerprint-ui.png)
+
 
 See the <a href="#getting-started">Getting Started</a> to get started.
 
@@ -108,7 +111,7 @@ setup_demo
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Intended to be run on Red Hat OpenShift Container Platform on AWS (self-managed).
+Intended to be run on Red Hat OpenShift Container Platform on AWS (self-managed). Alternatively, Red Hat OpenShift on AWS (managed).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
