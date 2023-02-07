@@ -12,6 +12,7 @@ You can run individual functions!
 
 example:
   setup_demo
+  delete_demo
 "
 }
 
