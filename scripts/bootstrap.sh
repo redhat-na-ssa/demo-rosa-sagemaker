@@ -12,6 +12,7 @@ You can run individual functions!
 
 example:
   setup_demo
+  delete_demo
 "
 }
 
@@ -65,7 +66,7 @@ setup_namespace(){
 
 }
 
-check_crd(){
+wait_for_crd(){
   CRD=${1}
   until oc get crd "${CRD}" >/dev/null 2>&1
     do sleep 1
@@ -94,8 +95,8 @@ NAMESPACE=fingerprint-id
 
   setup_namespace ${NAMESPACE}
 
-  check_crd buckets.s3.services.k8s.aws
-  check_crd notebookinstances.sagemaker.services.k8s.aws
+  wait_for_crd buckets.s3.services.k8s.aws
+  wait_for_crd notebookinstances.sagemaker.services.k8s.aws
 
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
@@ -108,9 +109,13 @@ NAMESPACE=fingerprint-id
 setup_odh(){
   NAMESPACE=fingerprint-id
   ODH_VERSION=1.3.0
+
   # install odh sub
-  oc \
-    apply -f openshift/odh/odh-v1.3-sub.yml
+  oc -n "${NAMESPACE}" \
+    apply -f openshift/odh/odh-v1.3.0-sub.yml
+  
+  # kludge: just sleep
+  sleep 10
   
   # approve operator install
   ODH_INSTALL=$(
@@ -245,12 +250,12 @@ setup_gradio(){
 
 setup_grafana(){
   oc apply -k openshift/operators/grafana-operator/overlays/models
-  check_crd grafanas.integreatly.org
+  wait_for_crd grafanas.integreatly.org
 }
 
 setup_prometheus(){
   oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
-  check_crd prometheuses.monitoring.coreos.com
+  wait_for_crd prometheuses.monitoring.coreos.com
 }
 
 delete_demo(){
