@@ -94,7 +94,7 @@ NAMESPACE=fingerprint-id
 
   setup_namespace ${NAMESPACE}
 
-  check_crd bucket.s3.services.k8s.aws
+  check_crd buckets.s3.services.k8s.aws
 
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
