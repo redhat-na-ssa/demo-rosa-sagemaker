@@ -95,6 +95,7 @@ NAMESPACE=fingerprint-id
   setup_namespace ${NAMESPACE}
 
   check_crd buckets.s3.services.k8s.aws
+  check_crd notebookinstances.sagemaker.services.k8s.aws
 
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
@@ -244,16 +245,12 @@ setup_gradio(){
 
 setup_grafana(){
   oc apply -k openshift/operators/grafana-operator/overlays/models
-  until oc get crd grafanas.integreatly.org >/dev/null 2>&1
-    do sleep 1
-  done
+  check_crd grafanas.integreatly.org
 }
 
 setup_prometheus(){
   oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
-  until oc get crd prometheuses.monitoring.coreos.com >/dev/null 2>&1
-    do sleep 1
-  done
+  check_crd prometheuses.monitoring.coreos.com
 }
 
 delete_demo(){
