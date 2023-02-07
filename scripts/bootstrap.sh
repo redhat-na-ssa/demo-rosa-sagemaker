@@ -65,10 +65,19 @@ setup_namespace(){
 
 }
 
+check_crd(){
+  CRD=${1}
+  until oc get crd "${CRD}" >/dev/null 2>&1
+    do sleep 1
+  done
+}
+
 setup_ack_system(){
   NAMESPACE=ack-system
 
   setup_namespace ${NAMESPACE}
+
+  oc apply -k openshift/operators/ack-controllers/aggregate/instance
 
   for type in ec2 ecr iam s3 sagemaker
   do
@@ -84,6 +93,8 @@ setup_sagemaker(){
 NAMESPACE=fingerprint-id
 
   setup_namespace ${NAMESPACE}
+
+  check_crd bucket.s3.services.k8s.aws
 
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
