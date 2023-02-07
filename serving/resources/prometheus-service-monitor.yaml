@@ -2,8 +2,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app: triton
-  name: triton
+    app: model-server-s3
+  name: model-server-s3
 spec:
   endpoints:
   - interval: 30s
@@ -11,4 +11,4 @@ spec:
     port: 8002-tcp
   selector:
     matchLabels:
-      app: triton
+      app: model-server-s3

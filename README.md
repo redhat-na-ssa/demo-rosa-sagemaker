@@ -86,7 +86,8 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 
 - [x] Red Hat OpenShift Cluster 4.9+
 - [x] Cluster admin permissions
-- [x] root `SSH` access to a bastion 
+- [x] `oc` cli installed
+- [x] `aws` cli installed
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -99,11 +100,19 @@ SSH to your bastion node with cluster-admin
 git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
 cd demo-rosa-sagemaker/
 
+# run bootstrap
+scripts/bootstrap.sh
+```
+
+```
 # source the bootstrap scripts
-source ./scripts/bootstrap.sh
+# if you want to run individual modules
 
 # run the installation scripts
 setup_demo
+
+# delete demo
+delete_demo
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
