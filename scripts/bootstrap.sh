@@ -104,7 +104,9 @@ NAMESPACE=fingerprint-id
   # create a SageMaker execution role  
   aws iam create-role \
      --role-name AmazonSageMaker-ExecutionRole \
-     --assume-role-policy-document ../sagemaker/awsexecutionrole-sagemaker.json
+     --assume-role-policy-document file://sagemaker/awsexecutionrole-sagemaker.json
+
+  sleep 4
 
   # attaches the AmazonSageMakerFullAccess policy to the role  
   aws iam attach-role-policy \
