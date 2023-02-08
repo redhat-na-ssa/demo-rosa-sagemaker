@@ -95,12 +95,6 @@ NAMESPACE=fingerprint-id
 
   setup_namespace ${NAMESPACE}
 
-  wait_for_crd buckets.s3.services.k8s.aws
-  wait_for_crd notebookinstances.sagemaker.services.k8s.aws
-
-  oc -n "${NAMESPACE}" \
-    apply -f openshift/ack-examples
-
   # create a SageMaker execution role  
   aws iam create-role \
      --role-name AmazonSageMaker-ExecutionRole \
@@ -113,6 +107,12 @@ NAMESPACE=fingerprint-id
      --role-name AmazonSageMaker-ExecutionRole \
      --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
  
+  wait_for_crd buckets.s3.services.k8s.aws
+  wait_for_crd notebookinstances.sagemaker.services.k8s.aws
+
+  oc -n "${NAMESPACE}" \
+    apply -f openshift/ack-examples
+
 }
 
 setup_odh(){
