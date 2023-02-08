@@ -47,7 +47,6 @@ check_oc(){
   oc status
 
   echo "UUID: ${UUID}"
-
   sleep 4
 }
 
@@ -56,6 +55,9 @@ get_aws_key(){
   export AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
   export AWS_SECRET_ACCESS_KEY=$(oc -n kube-system extract secret/aws-creds --keys=aws_secret_access_key --to=-)
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
+
+  echo "NOTICE!!! - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
+  sleep 4
 }
 
 setup_namespace(){
@@ -63,7 +65,6 @@ setup_namespace(){
 
   oc new-project ${NAMESPACE} 2>/dev/null || \
     oc project ${NAMESPACE}
-
 }
 
 wait_for_crd(){
@@ -115,12 +116,12 @@ NAMESPACE=fingerprint-id
 
 }
 
-setup_odh(){
+setup_odh_v1.3.0(){
   NAMESPACE=fingerprint-id
   ODH_VERSION=1.3.0
 
   # install odh sub
-  oc -n "${NAMESPACE}" \
+  oc -n openshift-operators \
     apply -f openshift/odh/odh-v1.3.0-sub.yml
   
   # kludge: just sleep
@@ -140,6 +141,8 @@ setup_odh(){
     --type=merge \
     --patch '{"spec":{"approved": true }}'
 
+  wait_for_crd kfdefs.kfdef.apps.kubeflow.org
+
   # install odh resources
   oc -n "${NAMESPACE}" \
     apply -f openshift/odh
@@ -147,6 +150,22 @@ setup_odh(){
   # install custom sagemeker notebook
   oc -n "${NAMESPACE}" \
     apply -f openshift/sagemaker-notebook
+}
+
+setup_dataset(){
+  SCRATCH=scratch
+  DATA_SRC=https://github.com/redhat-na-ssa/demo-datasci-fingerprint-data.git
+  
+  echo "Pulling dataset from ${DATA_SRC}..."
+
+  git clone "${DATA_SRC}" "${SCRATCH}"/.raw >/dev/null 2>&1 || echo "exists"
+
+  mkdir -p "${SCRATCH}"/{train,models}
+
+  tar -Jxf "${SCRATCH}"/.raw/left.tar.xz -C "${SCRATCH}"/train/ && \
+  tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
+  tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}" && \
+  tar -Jxf "${SCRATCH}"/.raw/model-v1-full.tar.xz -C "${SCRATCH}"/models
 }
 
 setup_s3(){
@@ -157,24 +176,10 @@ setup_s3(){
   export S3_POSTFIX=data
 
   export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
-
-  SCRATCH=scratch
-  DATA_SRC=https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
 }
 
 setup_s3_transfer(){
   which aws || return
-
-  echo "Pulling dataset from ${DATA_SRC} (gross)..."
-
-  git clone "${DATA_SRC}" "${SCRATCH}"/.raw >/dev/null 2>&1 || echo "exists"
-
-  mkdir -p "${SCRATCH}"/{train,models}
-
-  tar -Jxf "${SCRATCH}"/.raw/left.tar.xz -C "${SCRATCH}"/train/ && \
-  tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
-  tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}" && \
-  tar -Jxf "${SCRATCH}"/.raw/model-v1-full.tar.xz -C "${SCRATCH}"/models
 
   aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
 
@@ -184,7 +189,6 @@ setup_s3_transfer(){
   aws s3 sync "${SCRATCH}"/train/right "s3://${S3_BUCKET_DATA}"/train/right --quiet && \
   aws s3 sync "${SCRATCH}"/real "s3://${S3_BUCKET_DATA}"/real --quiet && \
   aws s3 sync "${SCRATCH}"/models "s3://${S3_BUCKET_DATA}"/models --quiet
-
 }
 
 setup_triton(){
@@ -221,7 +225,6 @@ setup_triton(){
     AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
     AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     MODEL_REPOSITORY=s3://"${S3_BUCKET_DATA}"/models
-
 }
 
 setup_triton_metrics(){
@@ -254,7 +257,6 @@ setup_gradio(){
     deploy/${APP_NAME} \
     INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/fingerprint \
     LOGLEVEL=DEBUG
-
 }
 
 setup_grafana(){
@@ -287,14 +289,15 @@ setup_demo(){
   check_oc
   get_aws_key
   
-  setup_s3
+  setup_dataset
 
+  setup_s3
   echo "Running s3 transfer in background..."
   setup_s3_transfer &
   
   setup_ack_system
   setup_sagemaker
-  setup_odh
+  setup_odh_v1.3.0
 
   setup_grafana
   setup_prometheus

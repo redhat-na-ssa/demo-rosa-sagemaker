@@ -1,3 +1,6 @@
-[submodule "data"]
+[submodule "explore"]
+	path = explore
+	url = https://github.com/redhat-na-ssa/demo-datasci-fingerprint.git
+[submodule "scratch"]
 	path = scratch/.raw
-	url = https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
+	url = https://github.com/redhat-na-ssa/demo-datasci-fingerprint-data.git
