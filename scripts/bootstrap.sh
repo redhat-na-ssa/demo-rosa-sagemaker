@@ -101,9 +101,9 @@ NAMESPACE=fingerprint-id
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
   
-  # aws iam create-role \
-  #   --policy-name AmazonSageMaker-ExecutionRole \
-  #   --policy-document file://sagemaker/awsexecutionrole-sagemaker.json
+   aws iam create-role \
+     --policy-name AmazonSageMaker-ExecutionRole \
+     --policy-document ../sagemaker/awsexecutionrole-sagemaker.json
 }
 
 setup_odh(){
