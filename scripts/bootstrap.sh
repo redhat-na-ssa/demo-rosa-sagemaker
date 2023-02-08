@@ -47,7 +47,6 @@ check_oc(){
   oc status
 
   echo "UUID: ${UUID}"
-
   sleep 4
 }
 
@@ -58,6 +57,7 @@ get_aws_key(){
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
 
   echo "NOTICE!!! - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
+  sleep 4
 }
 
 setup_namespace(){
@@ -65,7 +65,6 @@ setup_namespace(){
 
   oc new-project ${NAMESPACE} 2>/dev/null || \
     oc project ${NAMESPACE}
-
 }
 
 wait_for_crd(){
@@ -158,7 +157,6 @@ setup_dataset(){
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}" && \
   tar -Jxf "${SCRATCH}"/.raw/model-v1-full.tar.xz -C "${SCRATCH}"/models
-
 }
 
 setup_s3(){
@@ -182,7 +180,6 @@ setup_s3_transfer(){
   aws s3 sync "${SCRATCH}"/train/right "s3://${S3_BUCKET_DATA}"/train/right --quiet && \
   aws s3 sync "${SCRATCH}"/real "s3://${S3_BUCKET_DATA}"/real --quiet && \
   aws s3 sync "${SCRATCH}"/models "s3://${S3_BUCKET_DATA}"/models --quiet
-
 }
 
 setup_triton(){
@@ -219,7 +216,6 @@ setup_triton(){
     AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
     AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     MODEL_REPOSITORY=s3://"${S3_BUCKET_DATA}"/models
-
 }
 
 setup_triton_metrics(){
@@ -252,7 +248,6 @@ setup_gradio(){
     deploy/${APP_NAME} \
     INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/fingerprint \
     LOGLEVEL=DEBUG
-
 }
 
 setup_grafana(){
