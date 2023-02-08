@@ -113,6 +113,10 @@ NAMESPACE=fingerprint-id
 
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
+  
+  # TODO set the arn on the openshift/ack-examples/sagemaker-notebook-instance-cr.yaml
+  # aws command line aws iam get-role --role-name AmazonSagemaker-ExecutionRole --query 'Role.Arn' --output text
+  # export ARN=$(aws iam get-role --role-name AmazonSagemaker-ExecutionRole --query 'Role.Arn' --output text | sed -i 's/000000000000/@ARN/openshift/ack-examples/sagemaker-nb-instance-cr.yml)
 
 }
 
