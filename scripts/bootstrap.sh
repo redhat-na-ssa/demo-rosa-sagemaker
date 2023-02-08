@@ -56,6 +56,8 @@ get_aws_key(){
   export AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
   export AWS_SECRET_ACCESS_KEY=$(oc -n kube-system extract secret/aws-creds --keys=aws_secret_access_key --to=-)
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
+
+  echo "NOTICE!!! - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
 }
 
 setup_namespace(){
@@ -106,12 +108,12 @@ NAMESPACE=fingerprint-id
   #   --policy-document file://sagemaker/awsexecutionrole-sagemaker.json
 }
 
-setup_odh(){
+setup_odh_v1.3.0(){
   NAMESPACE=fingerprint-id
   ODH_VERSION=1.3.0
 
   # install odh sub
-  oc -n "${NAMESPACE}" \
+  oc -n openshift-operators \
     apply -f openshift/odh/odh-v1.3.0-sub.yml
   
   # kludge: just sleep
@@ -130,6 +132,8 @@ setup_odh(){
     patch installplan/${ODH_INSTALL} \
     --type=merge \
     --patch '{"spec":{"approved": true }}'
+
+  wait_for_crd kfdefs.kfdef.apps.kubeflow.org
 
   # install odh resources
   oc -n "${NAMESPACE}" \
@@ -289,7 +293,7 @@ setup_demo(){
   
   setup_ack_system
   setup_sagemaker
-  setup_odh
+  setup_odh_v1.3.0
 
   setup_grafana
   setup_prometheus
