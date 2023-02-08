@@ -140,23 +140,11 @@ setup_odh(){
     apply -f openshift/sagemaker-notebook
 }
 
-setup_s3(){
-  NAMESPACE=fingerprint-id
-
-  export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
-  export S3_BASE=sagemaker-fingerprint
-  export S3_POSTFIX=data
-
-  export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
-
+setup_dataset(){
   SCRATCH=scratch
-  DATA_SRC=https://github.com/redhat-na-ssa/demo-rosa-sagemaker-data.git
-}
-
-setup_s3_transfer(){
-  which aws || return
-
-  echo "Pulling dataset from ${DATA_SRC} (gross)..."
+  DATA_SRC=https://github.com/redhat-na-ssa/demo-datasci-fingerprint-data.git
+  
+  echo "Pulling dataset from ${DATA_SRC}..."
 
   git clone "${DATA_SRC}" "${SCRATCH}"/.raw >/dev/null 2>&1 || echo "exists"
 
@@ -166,6 +154,21 @@ setup_s3_transfer(){
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}" && \
   tar -Jxf "${SCRATCH}"/.raw/model-v1-full.tar.xz -C "${SCRATCH}"/models
+
+}
+
+setup_s3(){
+  NAMESPACE=fingerprint-id
+
+  export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
+  export S3_BASE=sagemaker-fingerprint
+  export S3_POSTFIX=data
+
+  export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
+}
+
+setup_s3_transfer(){
+  which aws || return
 
   aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
 
@@ -278,8 +281,9 @@ setup_demo(){
   check_oc
   get_aws_key
   
-  setup_s3
+  setup_dataset
 
+  setup_s3
   echo "Running s3 transfer in background..."
   setup_s3_transfer &
   
