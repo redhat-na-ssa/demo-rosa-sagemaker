@@ -118,6 +118,12 @@ NAMESPACE=fingerprint-id
   # aws command line aws iam get-role --role-name AmazonSagemaker-ExecutionRole --query 'Role.Arn' --output text
   # export ARN=$(aws iam get-role --role-name AmazonSagemaker-ExecutionRole --query 'Role.Arn' --output text | grep -Eo '[0-9]+(\.?)')
   # oc edit NotebookInstance | sed -i 's/000000000000/$ARN'
+  
+  export ARN=$(aws sts get-caller-identity --query "Account" --output text)
+  
+  < openshift/ack-examples/sagemaker-nb-instance-cr.yml \
+    sed "s@000000000000@${ARN}@g" | \
+    oc -n ${NAMESPACE} apply -f -
 
 }
 
