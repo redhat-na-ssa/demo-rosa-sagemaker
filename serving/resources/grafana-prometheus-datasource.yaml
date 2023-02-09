@@ -9,5 +9,5 @@ spec:
     isDefault: true
     name: Prometheus-Triton
     type: prometheus
-    url: http://prometheus-operated:9091
+    url: http://prometheus-operated:9090
   name: prometheus-grafana-datasource.yaml
