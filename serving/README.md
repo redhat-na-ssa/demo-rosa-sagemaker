@@ -20,7 +20,7 @@ oc new-project ${MODEL_SERVER_NAMESPACE}
 Deploy Triton.
 ```
 oc new-app \
-  https://github.com/codekow/s2i-patch.git
+  https://github.com/redhat-na-ssa/s2i-patch.git
   -n ${MODEL_SERVER_NAMESPACE} \
   --name=${TRITON_APP_NAME} \
   --context-dir=/s2i-triton \
@@ -122,7 +122,7 @@ oc new-project ${APP_NAMESPACE}
 ```
 
 ```
-oc new-app -n ${APP_NAMESPACE} --name=${INFERENCE_APP_NAME} --env=INFERENCE_HOST=${INFERENCE_HOST} --context-dir=/serving/application --strategy=docker https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git#bkoz-dev-v0.1
+oc new-app -n ${APP_NAMESPACE} --name=${INFERENCE_APP_NAME} --env=INFERENCE_HOST=${INFERENCE_HOST} --context-dir=/serving/application --strategy=docker https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
 ```
 
 Create a route and visit the URL.
