@@ -3,7 +3,7 @@ kind: GrafanaDashboard
 metadata:
   labels:
     app: triton-grafana
-  name: triton
+  name: triton-dashboard
 spec:
   # cat serving/grafana/triton-grafana-dashboard.json | gzip -f | base64 -w0
   gzipJson: >-
