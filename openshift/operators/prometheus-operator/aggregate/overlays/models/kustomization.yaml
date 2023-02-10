@@ -3,7 +3,7 @@ kind: Kustomization
 
 bases:
   - ../default
-  - ../../instance/overlays/models
+  - ../../../instance/overlays/models
 
 patches:
   - patch: |-
