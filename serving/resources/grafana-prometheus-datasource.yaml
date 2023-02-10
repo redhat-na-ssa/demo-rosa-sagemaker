@@ -1,6 +1,8 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
+  labels:
+    app: triton-grafana
   name: prometheus-grafana-datasource
 spec:
   datasources:
