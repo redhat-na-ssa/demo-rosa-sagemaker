@@ -3,5 +3,23 @@ kind: Kustomization
 
 namespace: models
 
-bases:
-  - ../example
+# bases:
+#   - ../example
+
+resources:
+  - namespace.yaml
+  - prometheus-instance.yaml
+  - prometheus-rbac.yaml
+  - prometheus-route.yaml
+  - prometheus-sa.yaml
+  - prometheus-service-monitor.yaml
+
+# patches:
+#   - patch: |-
+#       - op: add
+#         path: /spec/targetNamespaces
+#         value:
+#           - models
+#     target:
+#       kind: OperatorGroup
+#       name: prometheus

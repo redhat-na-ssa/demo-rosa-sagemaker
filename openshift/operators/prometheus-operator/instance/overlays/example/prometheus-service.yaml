@@ -18,7 +18,7 @@ spec:
       protocol: TCP
       targetPort: web-tls
   selector:
-    app: prometheus
+    prometheus: app
   sessionAffinity: ClientIP
   sessionAffinityConfig:
     clientIP:

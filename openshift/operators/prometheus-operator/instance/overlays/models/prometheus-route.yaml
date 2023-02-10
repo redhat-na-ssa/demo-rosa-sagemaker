@@ -1,6 +1,8 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
+  labels:
+    app: model-server-s3
   name: prometheus
 spec:
   to:
