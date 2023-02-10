@@ -4,10 +4,10 @@ metadata:
   name: prometheus-grafana-datasource
 spec:
   datasources:
-  - access: proxy
-    editable: true
-    isDefault: true
-    name: Prometheus-Triton
-    type: prometheus
-    url: http://prometheus-operated:9090
+    - access: proxy
+      editable: true
+      isDefault: true
+      name: Prometheus-Triton
+      type: prometheus
+      url: http://prometheus-operated:9090
   name: prometheus-grafana-datasource.yaml

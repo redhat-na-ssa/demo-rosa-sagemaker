@@ -34,8 +34,6 @@ spec:
       imagePullPolicy: Always
       name: prometheus-proxy
       ports:
-        - containerPort: 9090
-          name: web
         - containerPort: 9091
           name: web-tls
       resources:

@@ -7,10 +7,10 @@ metadata:
   name: prometheus-app
 spec:
   port:
-    targetPort: web
+    targetPort: web-tls
   tls:
     insecureEdgeTerminationPolicy: Redirect
-    termination: edge
+    termination: reencrypt
   to:
     kind: Service
     name: prometheus-app
