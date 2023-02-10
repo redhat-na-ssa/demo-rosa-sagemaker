@@ -1,11 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: models
-
 bases:
-  - ../../base
+  - ../default
+  - ../../instance/overlays/models
 
-resources:
-  - namespace.yaml
-  - operator-group.yaml
+patches:
+  - patch: |-
+      - op: add
+        path: /spec/targetNamespaces
+        value:
+          - models
+    target:
+      kind: OperatorGroup
+      name: prometheus
