@@ -86,7 +86,7 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 ### Installation
 
 ```commandline
-# SSH to your cluster node with cluster-admin
+# loging to openshift w/ cluster-admin
 oc login --token=sha256~<your_token>
 
 # clone this repo for the bootstrap scripts
@@ -96,7 +96,8 @@ cd demo-rosa-sagemaker/
 # run bootstrap to provision the demo on your cluster
 ./scripts/bootstrap.sh
 
-# optionally, you can `source ./scripts/bootstrap.sh` and run commands individually, i.e.
+# optional
+# source ./scripts/bootstrap.sh and run commands individually, i.e.
 setup_demo
 delete_demo
 ```
