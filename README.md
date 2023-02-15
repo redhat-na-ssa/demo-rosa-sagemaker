@@ -86,7 +86,7 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 ### Installation
 
 ```commandline
-# loging to openshift w/ cluster-admin
+# login to openshift w/ cluster-admin
 oc login --token=sha256~<your_token>
 
 # clone this repo for the bootstrap scripts
