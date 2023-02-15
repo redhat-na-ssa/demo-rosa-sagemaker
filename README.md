@@ -146,6 +146,7 @@ Extend RHOCP with AWS capabilities.
 
 ## Acknowledgements
 
+- [Explore: Fingerprint Data Set](https://github.com/redhat-na-ssa/datasci-fingerprint.git)
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 - [Kaggle - Sokoto Coventry Fingerprint Dataset](https://www.kaggle.com/datasets/ruizgara/socofing)
 - [TensorFlow Image Classification](https://www.tensorflow.org/tutorials/images/classification#use_tensorflow_lite)
