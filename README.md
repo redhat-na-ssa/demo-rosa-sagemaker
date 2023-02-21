@@ -79,7 +79,7 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 - [x] Red Hat OpenShift Cluster 4.10+
 - [x] Cluster admin permissions
 - [x] `oc` cli installed locally
-- [x] `python3.x` installed
+- [x] `python3` installed
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
