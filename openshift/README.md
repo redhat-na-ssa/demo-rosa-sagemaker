@@ -23,7 +23,7 @@ Operators easily extend Red Hat OpenShift for data science:
 ## Setup Custom Notebooks for ODH or RHODDS
 
 ```
-oc apply -f openshift/sagemaker-notebook
+oc apply -f custom/opendatahub/custom-notebook
 ```
 
 ## Examples

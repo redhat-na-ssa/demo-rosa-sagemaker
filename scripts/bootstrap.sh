@@ -160,7 +160,7 @@ setup_odh_v1.3.0(){
 
   # install custom sagemeker notebook
   oc -n "${NAMESPACE}" \
-    apply -f openshift/sagemaker-notebook
+    apply -f custom/opendatahub/custom-notebook
 }
 
 setup_dataset(){
