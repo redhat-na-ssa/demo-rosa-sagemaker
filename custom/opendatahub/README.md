@@ -1,4 +1,4 @@
-# ODH Quickstart
+# ODH Quick Start
 
 ## Install ODH operator (v1.3)
 

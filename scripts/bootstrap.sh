@@ -133,7 +133,7 @@ setup_odh_v1.3.0(){
 
   # install odh sub
   oc -n openshift-operators \
-    apply -f openshift/odh/odh-v1.3.0-sub.yml
+    apply -f custom/opendatahub/odh-v1.3.0-sub.yml
   
   # kludge: just sleep
   sleep 10
@@ -156,7 +156,7 @@ setup_odh_v1.3.0(){
 
   # install odh resources
   oc -n "${NAMESPACE}" \
-    apply -f openshift/odh
+    apply -f custom/opendatahub
 
   # install custom sagemeker notebook
   oc -n "${NAMESPACE}" \
