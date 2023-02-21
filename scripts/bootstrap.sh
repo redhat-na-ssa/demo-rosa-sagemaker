@@ -79,13 +79,13 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  oc apply -k openshift/operators/ack-controllers/aggregate/instance
+  oc apply -k components/operators/ack-controllers/aggregate/instance
 
   for type in ec2 ecr iam s3 sagemaker
   do
-    oc apply -k openshift/operators/ack-${type}-controller/overlays/alpha
+    oc apply -k components/operators/ack-${type}-controller/overlays/alpha
 
-    < openshift/operators/ack-${type}-controller/overlays/alpha/user-secrets-secret.yaml \
+    < components/operators/ack-${type}-controller/overlays/alpha/user-secrets-secret.yaml \
       sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
       oc -n ${NAMESPACE} apply -f -
   done
@@ -272,12 +272,12 @@ setup_gradio(){
 }
 
 setup_grafana(){
-  oc apply -k openshift/operators/grafana-operator/overlays/models
+  oc apply -k components/operators/grafana-operator/overlays/models
   wait_for_crd grafanas.integreatly.org
 }
 
 setup_prometheus(){
-  oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
+  oc apply -k components/operators/prometheus-operator/aggregate/overlays/models
   wait_for_crd prometheuses.monitoring.coreos.com
 }
 
