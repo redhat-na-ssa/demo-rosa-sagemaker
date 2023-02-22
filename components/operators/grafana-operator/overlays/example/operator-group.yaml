@@ -2,8 +2,7 @@
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: prometheus
-  namespace: prometheus
+  name: grafana
 spec:
   targetNamespaces:
-    - prometheus
+    - grafana

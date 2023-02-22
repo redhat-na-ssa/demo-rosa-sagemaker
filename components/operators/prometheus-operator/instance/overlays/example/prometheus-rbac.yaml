@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: prometheus-app
+  name: app-prometheus
 rules:
   - apiGroups:
       - ""
@@ -18,11 +18,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: prometheus-app
+  name: app-prometheus
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: prometheus-app
+  name: app-prometheus
 subjects:
   - kind: ServiceAccount
-    name: prometheus-app
+    name: app-prometheus

@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: prometheus-app
+  name: app-prometheus
 rules:
   - apiGroups:
       - authentication.k8s.io
@@ -20,11 +20,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: prometheus-app
+  name: app-prometheus
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: prometheus-app
+  name: app-prometheus
 subjects:
   - kind: ServiceAccount
-    name: prometheus-app
+    name: app-prometheus

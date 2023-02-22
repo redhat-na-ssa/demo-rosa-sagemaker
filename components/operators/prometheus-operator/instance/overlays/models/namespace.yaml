@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  annotations:
-    openshift.io/description: really, really rediculously good looking...
-    openshift.io/display-name: Hand Models
-  name: models

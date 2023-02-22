@@ -6,3 +6,4 @@ commonAnnotations:
 
 bases:
   - ../../operator/overlays/beta
+  - ../../instance/overlays/example
