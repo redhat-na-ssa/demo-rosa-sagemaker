@@ -21,6 +21,7 @@ Use output from `aws iam create-access-key` to update values `AWS_ACCESS_KEY_ID`
 
 ## Links
 
-[Examples: ACK Demo](ack-examples)
-[Examples: ACK Sagemaker](https://github.com/aws-controllers-k8s/sagemaker-controller/tree/main/samples)
-[Examples: Sagemaker Notebook Lifecycle](https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples)
+- [Examples: ACK Demo](ack-examples)
+- [Examples: Notebook Lifecycle Demo](notebook-lifecycle)
+- [Examples: ACK Sagemaker](https://github.com/aws-controllers-k8s/sagemaker-controller/tree/main/samples)
+- [Examples: Sagemaker Notebook Lifecycle](https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples)

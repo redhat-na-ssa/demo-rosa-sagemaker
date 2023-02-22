@@ -18,6 +18,6 @@ oc new-project ${NAMESPACE}
 # setup odh resources
 oc apply -n ${NAMESPACE} -f .
 
-# customer notebook instances
+# custom notebook instances
 oc apply -n ${NAMESPACE} -f custom-notebook
 ```
