@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    app: model-server-s3
+  name: models
+spec:
+  replicas: 2
+  serviceAccountName: prometheus-app
+  serviceMonitorSelector:
+    matchLabels:
+      app: model-server-s3
+
+
