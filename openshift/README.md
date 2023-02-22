@@ -23,11 +23,5 @@ Operators easily extend Red Hat OpenShift for data science:
 ## Setup Custom Notebooks for ODH or RHODDS
 
 ```
-oc apply -f custom/opendatahub/custom-notebook
+oc apply -f components/opendatahub/custom-notebook
 ```
-
-## Examples
-
-[ACK Demo - Examples](openshift/ack-examples)
-
-[ACK Sagemaker - Examples](https://github.com/aws-controllers-k8s/sagemaker-controller/tree/main/samples)
