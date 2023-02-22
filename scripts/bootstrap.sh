@@ -112,16 +112,16 @@ NAMESPACE=fingerprint-id
   wait_for_crd notebookinstances.sagemaker.services.k8s.aws
 
   oc -n "${NAMESPACE}" \
-    apply -f openshift/ack-examples
+    apply -f components/sagemaker/ack-examples
   
-  # TODO set the arn on the openshift/ack-examples/sagemaker-notebook-instance-cr.yaml
+  # TODO set the arn on the components/sagemaker/ack-examples/sagemaker-notebook-instance-cr.yaml
   # aws command line aws iam get-role --role-name AmazonSagemaker-ExecutionRole --query 'Role.Arn' --output text
   # export ARN=$(aws iam get-role --role-name AmazonSagemaker-ExecutionRole --query 'Role.Arn' --output text | grep -Eo '[0-9]+(\.?)')
   # oc edit NotebookInstance | sed -i 's/000000000000/$ARN'
   
   export ARN=$(aws sts get-caller-identity --query "Account" --output text)
   
-  < openshift/ack-examples/sagemaker-nb-instance-cr.yml \
+  < components/sagemaker/ack-examples/sagemaker-nb-instance-cr.yml \
     sed "s@000000000000@${ARN}@g" | \
     oc -n ${NAMESPACE} apply -f -
 
@@ -212,7 +212,7 @@ setup_triton(){
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
     --name s2i-triton \
-    --context-dir /serving/s2i-triton \
+    --context-dir /components/serving/s2i-triton \
     --strategy docker
   
   echo "Be patient, this may take a while (10 min)..."
@@ -246,7 +246,7 @@ setup_triton_metrics(){
   setup_namespace ${NAMESPACE}
 
   oc -n ${NAMESPACE} \
-    apply -f serving/resources
+    apply -f components/serving/resources
 }
 
 setup_gradio(){
@@ -259,7 +259,7 @@ setup_gradio(){
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
     --name ${APP_NAME} \
     --strategy docker \
-    --context-dir /serving/client
+    --context-dir /components/serving/s2i-gradio
 
   oc -n ${NAMESPACE} expose service \
     ${APP_NAME} \
