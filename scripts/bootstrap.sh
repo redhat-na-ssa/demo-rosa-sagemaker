@@ -2,10 +2,6 @@
 #set -e
 
 usage(){
-  # echo "
-  # setup virtualenv:
-  # python3 -m venv venv
-  # "
 
 echo "
 You can run individual functions!
@@ -19,10 +15,10 @@ example:
 is_sourced() {
   if [ -n "$ZSH_VERSION" ]; then 
       case $ZSH_EVAL_CONTEXT in *:file:*) return 0;; esac
-  else  # Add additional POSIX-compatible shell names here, if needed.
+  else  # add additional shell names here, if needed
       case ${0##*/} in dash|-dash|bash|-bash|ksh|-ksh|sh|-sh) return 0;; esac
   fi
-  return 1  # NOT sourced.
+  return 1  # NOT sourced
 }
 
 setup_venv(){
