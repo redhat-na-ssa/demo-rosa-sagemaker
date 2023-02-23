@@ -136,10 +136,11 @@ fi
 setup_repo(){
 # kludge: due to no CodeRepository CR
 
-GIT_REPO=https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
+GIT_REPO=https://github.com/redhat-na-ssa/datasci-fingerprint.git
+GIT_DST=explore
 
-[ ! -e /home/ec2-user/SageMaker/demo-rosa-sagemaker ] && \
-  git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git || echo "repo exists"
+[ ! -e "/home/ec2-user/SageMaker/${GIT_DST}" ] && \
+  git clone "${GIT_REPO}" "${GIT_DST}" || echo "repo exists"
 
 chown ec2-user:ec2-user -R /home/ec2-user/SageMaker
 
