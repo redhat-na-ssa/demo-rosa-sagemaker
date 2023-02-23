@@ -59,6 +59,8 @@ echo "Fetching the autostop script"
 SCRIPT=https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/autostop.py
 wget "${SCRIPT}"
 
+# install boto3
+/usr/bin/python3 -m pip install boto3 2>/dev/null
 
 echo "Detecting Python install with boto3 install"
 
