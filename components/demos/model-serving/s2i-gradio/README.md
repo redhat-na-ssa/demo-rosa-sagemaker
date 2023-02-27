@@ -18,7 +18,7 @@ s2i build ./source \
 ```
 NAMESPACE=standalone-serving
 APP_NAME=model-client
-INFERENCE_ENDPOINT=http://model-server-local:8000
+INFERENCE_ENDPOINT=http://model-server-embedded:8000
 
 oc new-app \
   -n ${NAMESPACE} \
