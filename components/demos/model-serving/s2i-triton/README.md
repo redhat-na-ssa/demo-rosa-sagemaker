@@ -65,7 +65,7 @@ oc set env \
 Deploy model via local folder
 
 ```
-APP_NAME=model-server-local
+APP_NAME=model-server-embedded
 
 # configure new build config
 oc new-build \
@@ -82,6 +82,10 @@ oc start-build \
   ${APP_NAME} \
   --follow \
   --from-dir models
+
+# fix: crashing on gpu nodes
+oc set env deployment ${APP_NAME} \
+  --env TF_GPU_ALLOCATOR=cuda_malloc_async
 ```
 
 ```
