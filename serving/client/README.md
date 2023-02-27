@@ -14,9 +14,9 @@ s2i build ./source \
   s2i-gradio
 ```
 
-## Deploy Client on OpenShfit
+## Deploy Client on OpenShift
 ```
-NAMESPACE=standalone-serving
+NAMESPACE=model-serving
 APP_NAME=model-client
 INFERENCE_ENDPOINT=http://model-server-embedded:8000
 
