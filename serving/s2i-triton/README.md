@@ -99,7 +99,7 @@ oc start-build \
   --from-dir models
 
 # fix: crashing on gpu nodes
-oc set env deployment ${APP_NAME} \
+oc set env bc ${APP_NAME} \
     -n "${NAMESPACE}" \
   --env TF_GPU_ALLOCATOR=cuda_malloc_async
 ```
