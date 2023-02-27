@@ -39,10 +39,10 @@ oc create route edge ${TRITON_APP_NAME} --service=${TRITON_APP_NAME} --port=8000
 
 Basic model server test
 ```
-export INFERENCE_HOST=$(oc get route -n ${MODEL_SERVER_NAMESPACE} ${TRITON_APP_NAME} --template={{.spec.host}})
+export INFERENCE_ENDPOINT=$(oc get route -n ${MODEL_SERVER_NAMESPACE} ${TRITON_APP_NAME} --template={{.spec.host}})
 ```
 ```
-curl https://${INFERENCE_HOST}/v2 | python -m json.tool
+curl https://${INFERENCE_ENDPOINT}/v2 | python -m json.tool
 ```
 Sample output
 ```
@@ -68,7 +68,7 @@ Sample output
 
 Model metadata test
 ```
-curl https://${INFERENCE_HOST}/v2/models/fingerprint | python -m json.tool
+curl https://${INFERENCE_ENDPOINT}/v2/models/fingerprint | python -m json.tool
 ```
 
 Sample output.
@@ -112,8 +112,8 @@ cd application
 
 ```
 APP_NAMESPACE=clients
-INFERENCE_APP_NAME=fingerprint
-INFERENCE_HOST=$(oc get route ${TRITON_APP_NAME} -n ${MODEL_SERVER_NAMESPACE} --template={{.spec.host}})
+APP_NAME=fingerprint
+INFERENCE_ENDPOINT=$(oc get route ${TRITON_APP_NAME} -n ${MODEL_SERVER_NAMESPACE} --template={{.spec.host}})
 ```
 
 Create a project.
@@ -122,12 +122,12 @@ oc new-project ${APP_NAMESPACE}
 ```
 
 ```
-oc new-app -n ${APP_NAMESPACE} --name=${INFERENCE_APP_NAME} --env=INFERENCE_HOST=${INFERENCE_HOST} --context-dir=/serving/application --strategy=docker https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
+oc new-app -n ${APP_NAMESPACE} --name=${APP_NAME} --env=INFERENCE_ENDPOINT=${INFERENCE_ENDPOINT} --context-dir=/serving/application --strategy=docker https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
 ```
 
 Create a route and visit the URL.
 ```
-oc create route edge ${INFERENCE_APP_NAME} --service=${INFERENCE_APP_NAME} --port=8080 -n ${APP_NAMESPACE}
+oc create route edge ${APP_NAME} --service=${APP_NAME} --port=8080 -n ${APP_NAMESPACE}
 ```
 
 ### Model Server Monitoring
