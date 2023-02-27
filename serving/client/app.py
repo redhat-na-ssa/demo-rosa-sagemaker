@@ -74,7 +74,7 @@ if __name__ == "__main__":
     local_dev = """
     For local testing try:
 
-    export INFERENCE_ENDPOINT="https://model-server-s3-example-triton.apps.cluster-rr8ch.rr8ch.sandbox2223.opentlc.com/v2/models/fingerprint"
+    export INFERENCE_ENDPOINT="http://model-server-embedded:8000"
     curl ${INFERENCE_ENDPOINT} | python -m json.tool
     """
 

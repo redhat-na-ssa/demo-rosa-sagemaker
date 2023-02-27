@@ -46,11 +46,13 @@ Deploy model via git repo
 
 ```
 APP_NAME=example-triton-server
+APP_LABEL="app.kubernetes.io/part-of=${APP_NAME}"
 
 oc new-app \
   -n "${NAMESPACE}" \
   s2i-triton:latest~https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git \
-  --name ${APP_NAME} \
+  --name "${APP_NAME}" \
+  -l "${APP_LABEL}" \
   --strategy source \
   --context-dir /serving/s2i-triton/models
 ```
@@ -59,15 +61,17 @@ Deploy model via s3
 
 ```
 APP_NAME=model-server-s3
+APP_LABEL="app.kubernetes.io/part-of=${APP_NAME}"
 
 oc new-app \
   -n "${NAMESPACE}" \
   s2i-triton:latest \
-  --name ${APP_NAME}
+  --name "${APP_NAME}"
+  -l "${APP_LABEL}"
 
 oc set env \
   -n "${NAMESPACE}" \
-  deploy/${APP_NAME} \
+  "deploy/${APP_NAME}" \
   AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
   AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
   AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
@@ -79,12 +83,14 @@ Deploy model via local folder
 
 ```
 APP_NAME=model-server-embedded
+APP_LABEL="app.kubernetes.io/part-of=${APP_NAME}"
 
 # configure new build config
 oc new-build \
   -n "${NAMESPACE}" \
   --image-stream s2i-triton:latest \
-  --name ${APP_NAME} \
+  --name "${APP_NAME}" \
+  -l "${APP_LABEL}" \
   --strategy source \
   --binary \
   --context-dir .
@@ -94,29 +100,31 @@ oc new-build \
 # start build from local folder
 oc start-build \
   -n "${NAMESPACE}" \
-  ${APP_NAME} \
+  "${APP_NAME}" \
   --follow \
   --from-dir models
-
-# fix: crashing on gpu nodes
-oc set env bc ${APP_NAME} \
-    -n "${NAMESPACE}" \
-  --env TF_GPU_ALLOCATOR=cuda_malloc_async
 ```
 
 ```
 # deploy APP_NAME from model image
 oc new-app \
-  ${APP_NAME} \
+  "${APP_NAME}" \
+  -l "${APP_LABEL}" \
   -n "${NAMESPACE}" \
   --allow-missing-imagestream-tags
+
+# fix: crashing on gpu nodes
+oc set env deployment "${APP_NAME}" \
+    -n "${NAMESPACE}" \
+  --env TF_GPU_ALLOCATOR=cuda_malloc_async
 ```
 
 Expose API / model server - Route
 
 ```
 oc expose service \
-  ${APP_NAME} \
+  "${APP_NAME}" \
+  -l "${APP_LABEL}" \
   -n "${NAMESPACE}" \
   --port 8000 \
   --overrides='{"spec":{"tls":{"termination":"edge"}}}'
@@ -127,12 +135,12 @@ Expose metrics  - Route (optional)
 ```
 oc expose service \
   -n "${NAMESPACE}" \
-  ${APP_NAME} \
-  --name ${APP_NAME}-metrics \
+  "${APP_NAME}" \
+  --name "${APP_NAME}-metrics" \
   --port 8002 \
   --overrides='{"spec":{"tls":{"termination":"edge"}}}'
 
-HOST=$(oc get route ${APP_NAME}-metric --template={{.spec.host}})
+HOST=$(oc get route "${APP_NAME}-metric" --template={{.spec.host}})
 curl -s https://${HOST}/metrics | python -m json.tool
 ```
 
@@ -142,7 +150,7 @@ Test model server / metrics
 APP_NAME=model-server
 
 # test via route
-HOST=$(oc get route ${APP_NAME} --template={{.spec.host}})
+HOST=$(oc get route "${APP_NAME}" --template={{.spec.host}})
 
 curl -s https://${HOST}/v2 | python -m json.tool
 curl -s https://${HOST}/v2/models/< model name > | python -m json.tool
@@ -151,9 +159,9 @@ curl -s https://${HOST}/v2/models/< model name > | python -m json.tool
 # test via localhost
 oc get pods
 
-oc exec deploy/${APP_NAME} -- curl -s localhost:8000/v2
-oc exec deploy/${APP_NAME} -- curl -s localhost:8000/metrics
-oc exec deploy/${APP_NAME} -- curl -s localhost:8000/v2/models/< model name >
+oc exec "deploy/${APP_NAME}" -- curl -s localhost:8000/v2
+oc exec "deploy/${APP_NAME}" -- curl -s localhost:8000/metrics
+oc exec "deploy/${APP_NAME}" -- curl -s localhost:8000/v2/models/< model name >
 ```
 
 ## Links
