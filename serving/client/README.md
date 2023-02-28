@@ -19,7 +19,7 @@ s2i build ./source \
 NAMESPACE=model-serving
 APP_NAME=model-client
 APP_LABEL="app.kubernetes.io/part-of=${APP_NAME}"
-INFERENCE_ENDPOINT=http://model-server-embedded:8000
+INFERENCE_ENDPOINT=http://model-server-embedded:8000/v2/models/fingerprint
 
 oc new-app \
   -n ${NAMESPACE} \
@@ -36,5 +36,4 @@ oc expose service \
   -n "${NAMESPACE}" \
   --port 8080 \
   --overrides='{"spec":{"tls":{"termination":"edge"}}}'
-
 ```
