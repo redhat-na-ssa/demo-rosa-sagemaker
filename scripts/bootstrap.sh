@@ -79,13 +79,13 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  oc apply -k openshift/operators/ack-controllers/aggregate/instance
+  oc apply -k openshift/operators/${NAMESPACE}/aggregate/popular
 
   for type in ec2 ecr iam s3 sagemaker
   do
-    oc apply -k openshift/operators/ack-${type}-controller/overlays/alpha
+    oc apply -k openshift/operators/ack-${type}-controller/operator/overlays/alpha
 
-    < openshift/operators/ack-${type}-controller/overlays/alpha/user-secrets-secret.yaml \
+    < openshift/operators/ack-${type}-controller/operator/overlays/alpha/user-secrets-secret.yaml \
       sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
       oc -n ${NAMESPACE} apply -f -
   done
@@ -188,13 +188,12 @@ setup_s3(){
   export S3_POSTFIX=data
 
   export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
+
+  aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
 }
 
 setup_s3_transfer(){
   which aws || return
-
-  aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
-
   echo "Copying dataset into s3://${S3_BUCKET_DATA}..."
 
   aws s3 sync "${SCRATCH}"/train/left "s3://${S3_BUCKET_DATA}"/train/left --quiet && \
@@ -309,7 +308,7 @@ setup_demo(){
   
   setup_ack_system
   setup_sagemaker
-  setup_odh_v1.3.0
+  # setup_odh_v1.3.0
 
   setup_grafana
   setup_prometheus
