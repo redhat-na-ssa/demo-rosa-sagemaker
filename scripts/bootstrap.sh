@@ -79,7 +79,7 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  oc apply -k openshift/operators/ack-controllers/aggregate/instance
+  oc apply -k openshift/operators/ack-controllers/aggregate/popular
 
   for type in ec2 ecr iam s3 sagemaker
   do
@@ -300,11 +300,11 @@ setup_demo(){
   check_oc
   get_aws_key
   
-  # setup_dataset
+  setup_dataset
 
-  # setup_s3
-  # echo "Running s3 transfer in background..."
-  # setup_s3_transfer &
+  setup_s3
+  echo "Running s3 transfer in background..."
+  setup_s3_transfer &
   
   setup_ack_system
   # setup_sagemaker
