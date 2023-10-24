@@ -309,7 +309,7 @@ setup_demo(){
   
   setup_ack_system
   setup_sagemaker
-  setup_odh_v1.3.0
+  # setup_odh_v1.3.0
 
   setup_grafana
   setup_prometheus
