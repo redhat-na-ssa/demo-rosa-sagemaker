@@ -90,7 +90,7 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 oc login --token=sha256~<your_token>
 
 # clone this repo for the bootstrap scripts
-git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
+git clone --recurse-submodules https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
 cd demo-rosa-sagemaker/
 
 # run bootstrap to provision the demo on your cluster

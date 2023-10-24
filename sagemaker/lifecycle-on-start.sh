@@ -140,7 +140,7 @@ GIT_REPO=https://github.com/redhat-na-ssa/datasci-fingerprint.git
 GIT_DST=/home/ec2-user/SageMaker/explore
 
 [ ! -e "${GIT_DST}" ] && \
-  git clone "${GIT_REPO}" "${GIT_DST}" || echo "repo exists"
+  git clone --recurse-submodules "${GIT_REPO}" "${GIT_DST}" || echo "repo exists"
 
 chown ec2-user:ec2-user -R /home/ec2-user/SageMaker
 
