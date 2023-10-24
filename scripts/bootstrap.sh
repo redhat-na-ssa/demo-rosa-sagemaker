@@ -83,9 +83,9 @@ setup_ack_system(){
 
   for type in ec2 ecr iam s3 sagemaker
   do
-    oc apply -k openshift/operators/ack-${type}-controller/overlays/alpha
+    oc apply -k openshift/operators/ack-${type}-controller/operator/overlays/alpha
 
-    < openshift/operators/ack-${type}-controller/overlays/alpha/user-secrets-secret.yaml \
+    < openshift/operators/ack-${type}-controller/operator/overlays/alpha/user-secrets-secret.yaml \
       sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
       oc -n ${NAMESPACE} apply -f -
   done
@@ -300,21 +300,21 @@ setup_demo(){
   check_oc
   get_aws_key
   
-  setup_dataset
+  # setup_dataset
 
-  setup_s3
-  echo "Running s3 transfer in background..."
-  setup_s3_transfer &
+  # setup_s3
+  # echo "Running s3 transfer in background..."
+  # setup_s3_transfer &
   
   setup_ack_system
-  setup_sagemaker
+  # setup_sagemaker
   # setup_odh_v1.3.0
 
-  setup_grafana
-  setup_prometheus
-  setup_gradio
-  setup_triton_metrics
-  setup_triton
+  # setup_grafana
+  # setup_prometheus
+  # setup_gradio
+  # setup_triton_metrics
+  # setup_triton
 }
 
 is_sourced && usage || setup_demo

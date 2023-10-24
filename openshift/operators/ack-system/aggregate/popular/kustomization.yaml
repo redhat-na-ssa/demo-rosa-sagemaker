@@ -3,10 +3,10 @@ kind: Kustomization
 
 namespace: ack-system
 
-bases:
-  - ../instance
-  - ../../../ack-ec2-controller/overlays/alpha
-  - ../../../ack-ecr-controller/overlays/alpha
-  - ../../../ack-iam-controller/overlays/alpha
-  - ../../../ack-s3-controller/overlays/alpha
-  - ../../../ack-sagemaker-controller/overlays/alpha
+resources:
+  - ../../instance
+  - ../../../ack-ec2-controller/operator/overlays/alpha
+  - ../../../ack-ecr-controller/operator/overlays/alpha
+  - ../../../ack-iam-controller/operator/overlays/alpha
+  - ../../../ack-s3-controller/operator/overlays/alpha
+  - ../../../ack-sagemaker-controller/operator/overlays/alpha
