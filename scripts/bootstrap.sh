@@ -79,7 +79,7 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  oc apply -k openshift/operators/ack-controllers/aggregate/popular
+  oc apply -k openshift/operators/${NAMESPACE}/aggregate/popular
 
   for type in ec2 ecr iam s3 sagemaker
   do
@@ -307,14 +307,14 @@ setup_demo(){
   setup_s3_transfer &
   
   setup_ack_system
-  # setup_sagemaker
+  setup_sagemaker
   # setup_odh_v1.3.0
 
-  # setup_grafana
-  # setup_prometheus
-  # setup_gradio
-  # setup_triton_metrics
-  # setup_triton
+  setup_grafana
+  setup_prometheus
+  setup_gradio
+  setup_triton_metrics
+  setup_triton
 }
 
 is_sourced && usage || setup_demo
