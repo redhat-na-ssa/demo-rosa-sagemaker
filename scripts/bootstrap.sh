@@ -188,13 +188,12 @@ setup_s3(){
   export S3_POSTFIX=data
 
   export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
+
+  aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
 }
 
 setup_s3_transfer(){
   which aws || return
-
-  aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
-
   echo "Copying dataset into s3://${S3_BUCKET_DATA}..."
 
   aws s3 sync "${SCRATCH}"/train/left "s3://${S3_BUCKET_DATA}"/train/left --quiet && \
