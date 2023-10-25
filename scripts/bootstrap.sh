@@ -1,23 +1,41 @@
 #!/bin/bash
-#set -e
+# set -e
 
-usage(){
-  # echo "
-  # setup virtualenv:
-  # python3 -m venv venv
-  # "
+# 8 seconds is usually enough time for the average user to realize they foobar
+export SLEEP_SECONDS=8
 
-echo "
-You can run individual functions!
+################# standard init #################
 
-example:
-  setup_demo
-  delete_demo
-"
+check_shell(){
+  [ -n "$BASH_VERSION" ] && return
+  echo "Please verify you are running in bash shell"
+  sleep "${SLEEP_SECONDS:-8}"
 }
 
+check_git_root(){
+  if [ -d .git ] && [ -d scripts ]; then
+    GIT_ROOT=$(pwd)
+    export GIT_ROOT
+    echo "GIT_ROOT: ${GIT_ROOT}"
+  else
+    echo "Please run this script from the root of the git repo"
+    exit
+  fi
+}
+
+get_script_path(){
+  SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+  echo "SCRIPT_DIR: ${SCRIPT_DIR}"
+}
+
+check_shell
+check_git_root
+get_script_path
+
+################# standard init #################
+
 is_sourced() {
-  if [ -n "$ZSH_VERSION" ]; then 
+  if [ -n "$ZSH_VERSION" ]; then
       case $ZSH_EVAL_CONTEXT in *:file:*) return 0;; esac
   else  # Add additional POSIX-compatible shell names here, if needed.
       case ${0##*/} in dash|-dash|bash|-bash|ksh|-ksh|sh|-sh) return 0;; esac
@@ -25,39 +43,36 @@ is_sourced() {
   return 1  # NOT sourced.
 }
 
-setup_venv(){
-  python3 -m venv venv
-  source venv/bin/activate
-  pip install -q -U pip
-  pip install -q awscli
-
-  check_venv || usage
-}
-
-check_venv(){
+py_check_venv(){
   # activate python venv
-  [ -d venv ] && . venv/bin/activate || setup_venv
+  [ -d venv ] || setup_venv 
+  . venv/bin/activate
+  [ -e requirements.txt ] && pip install -q -r requirements.txt
 }
 
-check_oc(){
-  echo "Are you on the right OCP cluster?"
+py_setup_venv(){
+  python3 -m venv venv
+  . venv/bin/activate
+  pip install -q -U pip
 
-  oc whoami || exit 0
-  export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
-  oc status
-
-  echo "UUID: ${UUID}"
-  sleep 4
+  py_check_venv || usage
 }
 
-get_aws_key(){
-  # get aws creds
-  export AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
-  export AWS_SECRET_ACCESS_KEY=$(oc -n kube-system extract secret/aws-creds --keys=aws_secret_access_key --to=-)
-  export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
+ocp_check_login(){
+  oc whoami || return 1
+  oc cluster-info | head -n1
+  echo
+}
 
-  echo "NOTICE!!! - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
-  sleep 4
+ocp_check_info(){
+  ocp_check_login || return 1
+
+  echo "NAMESPACE: $(oc project -q)"
+  sleep "${SLEEP_SECONDS:-8}"
+}
+
+ocp_aws_cluster(){
+  oc -n kube-system get secret/aws-creds -o name > /dev/null 2>&1 || return 1
 }
 
 setup_namespace(){
@@ -67,9 +82,24 @@ setup_namespace(){
     oc project ${NAMESPACE}
 }
 
-wait_for_crd(){
+ocp_aws_get_key(){
+  # get aws creds
+  ocp_aws_cluster || return 1
+  
+  AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
+  AWS_SECRET_ACCESS_KEY=$(oc -n kube-system extract secret/aws-creds --keys=aws_secret_access_key --to=-)
+  AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
+
+  export AWS_ACCESS_KEY_ID
+  export AWS_SECRET_ACCESS_KEY
+  export AWS_DEFAULT_REGION
+
+  echo "AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
+}
+
+k8s_wait_for_crd(){
   CRD=${1}
-  until oc get crd "${CRD}" >/dev/null 2>&1
+  until kubectl get crd "${CRD}" >/dev/null 2>&1
     do sleep 1
   done
 }
@@ -90,6 +120,8 @@ setup_ack_system(){
       oc -n ${NAMESPACE} apply -f -
   done
 }
+
+################# demo specific #################
 
 setup_sagemaker(){
 NAMESPACE=fingerprint-id
@@ -295,10 +327,27 @@ delete_demo(){
   done
 }
 
+usage(){
+  # echo "
+  # setup virtualenv:
+  # python3 -m venv venv
+  # "
+
+echo "
+You can run individual functions!
+
+example:
+  setup_demo
+  delete_demo
+"
+}
+
+################# demo specific #################
+
 setup_demo(){
-  check_venv
-  check_oc
-  get_aws_key
+  py_check_venv
+  ocp_check_info
+  ocp_aws_get_key
   
   setup_dataset
 
