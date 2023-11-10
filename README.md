@@ -86,20 +86,28 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 ### Installation
 
 ```commandline
-# login to openshift w/ cluster-admin
-oc login --token=sha256~<your_token>
+# From the browser,
+# 1. Access the web console and login
 
-# clone this repo for the bootstrap scripts
-git clone --recurse-submodules https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
-cd demo-rosa-sagemaker/
+# 2. copy your terminal login command and token from the web console.
 
-# run bootstrap to provision the demo on your cluster
-./scripts/bootstrap.sh
+# From your terminal,
+# 3. log into the cluster using oc login (you may need to add --insecure-skip-tls-verify=true)
+% oc login
+
+# 4. clone in the demo-rosa-sagemaker repo to provision the demo
+% git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
+
+# 5. change in to the demo-rosa-sagemaker directory
+% cd demo-rosa-sagemaker
+
+# 6. run the scripts/bootstrap.sh 
+% ./scripts/bootstrap.sh
 
 # optional
 # source ./scripts/bootstrap.sh and run commands individually, i.e.
-setup_demo
-delete_demo
+% setup_demo
+% delete_demo
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -114,23 +122,6 @@ Extend RHOCP with AWS capabilities.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
-
-## Roadmap
-- [ ] create branch `RHODS`
-  - use RHODS notebook
-  - use elyra
-  - ModelMesh with Intel OpenVINO for serving
-- [ ] create branch `ODH`
-  - use ODH notebook
-  - use airflow
-  - use FastAPI for serving
-- [ ] create branch `edge`
-  - deploy the tflite model to edge device with Ansible
-  - test fingerprint
-- [ ] create branch `djl`
-  - use djl.ai for model dev
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Contributing
 
