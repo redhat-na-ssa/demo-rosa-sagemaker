@@ -294,7 +294,10 @@ setup_gradio(){
 
   oc -n ${NAMESPACE} expose service \
     ${APP_NAME} \
-    --overrides='{"spec":{"tls":{"termination":"edge"}}}'
+
+  oc -n ${NAMESPACE} patch route \
+    ${APP_NAME} \
+    --patch='{"spec":{"tls":{"termination":"edge"}}}'
 
   oc -n ${NAMESPACE} set env \
     deploy/${APP_NAME} \
