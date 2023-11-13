@@ -73,7 +73,7 @@ See the <a href="#getting-started">Getting Started</a> to get started.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-If you have the demo installed, start at the `./notebooks/fingerprint/model_train_s3_leftright.ipynb`.
+If you have the demo installed, start in the AWS Console SageMaker Notebooks.
 If not, see the <a href="#prerequisites">Prerequisites</a>.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -82,6 +82,7 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 
 - [x] Red Hat OpenShift Cluster 4.10+
 - [x] Cluster admin permissions
+- [x] AWS Web Console access
 - [x] `oc` cli installed locally
 - [x] `python3.x` installed
 
