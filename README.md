@@ -96,7 +96,7 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 - [x] AWS Web Console access
 - [x] `oc` cli installed locally
 - [x] `python3.x` installed locally
-- [x] 'aws-cli' installed locally
+- [x] `aws-cli` installed locally
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
