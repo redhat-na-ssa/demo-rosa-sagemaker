@@ -45,10 +45,12 @@ is_sourced() {
 
 py_check_venv(){
   # activate python venv
-  [ -d venv ] || setup_venv 
+  [ -d venv ] || py_setup_venv 
   . venv/bin/activate
   [ -e requirements.txt ] && pip install -q -r requirements.txt
-  pip install -q awscli
+
+  pip install -q -U awscli
+
 }
 
 py_setup_venv(){
