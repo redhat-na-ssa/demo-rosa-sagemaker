@@ -48,6 +48,7 @@ py_check_venv(){
   [ -d venv ] || setup_venv 
   . venv/bin/activate
   [ -e requirements.txt ] && pip install -q -r requirements.txt
+  pip install -q awscli
 }
 
 py_setup_venv(){
