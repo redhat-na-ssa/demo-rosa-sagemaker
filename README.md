@@ -109,21 +109,21 @@ If not, see the <a href="#prerequisites">Prerequisites</a>.
 
 # From your terminal,
 # 3. log into the cluster using oc login (you may need to add --insecure-skip-tls-verify=true)
-% oc login
+oc login
 
 # 4. clone in the demo-rosa-sagemaker repo to provision the demo
-% git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
+git clone https://github.com/redhat-na-ssa/demo-rosa-sagemaker.git
 
 # 5. change in to the demo-rosa-sagemaker directory
-% cd demo-rosa-sagemaker
+cd demo-rosa-sagemaker
 
 # 6. run the scripts/bootstrap.sh 
-% ./scripts/bootstrap.sh
+./scripts/bootstrap.sh
 
 # optional
 # source ./scripts/bootstrap.sh and run commands individually, i.e.
-% setup_demo
-% delete_demo
+setup_demo
+delete_demo
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
