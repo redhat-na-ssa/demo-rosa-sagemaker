@@ -1,7 +1,7 @@
-## Why use SageMaker?
+# Why use SageMaker?
 
-SageMaker is a fully managed machine learning service for AWS. With SageMaker, 
-data scientists and developers can quickly develop / manage machine learning models. 
+SageMaker is a fully managed machine learning service for AWS. With SageMaker,
+data scientists and developers can quickly develop / manage machine learning models.
 AWS Controllers for Kubernetes easily extend Red Hat OpenShift to manage AWS resources.
 
 ## Setup AWS Controllers for Kubernetes / ACK Operators
