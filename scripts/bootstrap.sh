@@ -159,42 +159,6 @@ NAMESPACE=fingerprint-id
 
 }
 
-setup_odh_v1.3.0(){
-  NAMESPACE=fingerprint-id
-  ODH_VERSION=1.3.0
-
-  # install odh sub
-  oc -n openshift-operators \
-    apply -f openshift/odh/odh-v1.3.0-sub.yml
-  
-  # kludge: just sleep
-  sleep 10
-  
-  # approve operator install
-  ODH_INSTALL=$(
-    oc -n openshift-operators \
-    get installplan \
-    -l operators.coreos.com/opendatahub-operator.openshift-operators | \
-      grep ${ODH_VERSION} | \
-      awk '{print $1}'
-  )
-
-  oc -n openshift-operators \
-    patch installplan/${ODH_INSTALL} \
-    --type=merge \
-    --patch '{"spec":{"approved": true }}'
-
-  wait_for_crd kfdefs.kfdef.apps.kubeflow.org
-
-  # install odh resources
-  oc -n "${NAMESPACE}" \
-    apply -f openshift/odh
-
-  # install custom sagemeker notebook
-  oc -n "${NAMESPACE}" \
-    apply -f openshift/sagemaker-notebook
-}
-
 setup_dataset(){
   SCRATCH=scratch
   DATA_SRC=https://github.com/redhat-na-ssa/datasci-fingerprint-data.git
@@ -293,7 +257,7 @@ setup_gradio(){
     --context-dir /serving/client
 
   oc -n ${NAMESPACE} expose service \
-    ${APP_NAME} \
+    ${APP_NAME}
 
   oc -n ${NAMESPACE} patch route \
     ${APP_NAME} \
@@ -331,10 +295,6 @@ delete_demo(){
 }
 
 usage(){
-  # echo "
-  # setup virtualenv:
-  # python3 -m venv venv
-  # "
 
 echo "
 You can run individual functions!
@@ -360,7 +320,6 @@ setup_demo(){
   
   setup_ack_system
   setup_sagemaker
-  # setup_odh_v1.3.0
 
   setup_grafana
   setup_prometheus
