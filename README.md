@@ -42,7 +42,18 @@
 
 ![](docs/ml-lifecycle-sm-ocp.png)
 
-Explore the data science toolbox that are in reach when you have Red Hat OpenShift on AWS.
+Goal for this demo is to demonstrate the flexible integration of tools to train a model with SageMaker, serve the model on OpenShift using the NVIDIA Triton Inference engine and interact with the model using Gradio.
+
+## Why do this? 
+
+Overall, Data science needs flexibility and IT needs standardization.
+- From a development perspective, SageMaker is a robust toolkit that data scientists are familiar with from preparing data and training models.
+- From an operational perspective, Red Hat OpenShift is a best-in-class enterprise Kubernetes container platform. It provides a hybrid cloud solution from private data centers to multiple cloud vendors. It makes it easier to build, operate, and scale globally, and on demand, through a familiar management interface.
+- Partner and open source software easily extend Red Hat OpenShift for other AI/ML needs:
+  - AWS Controller for Kubernetes Operators: IAM, EC2, S3, SageMaker
+  - NVIDIA Triton Inference server
+  - and the Gradio UI software library
+
 
 ### The Scenario
 
