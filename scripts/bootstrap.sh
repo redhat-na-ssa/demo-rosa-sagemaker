@@ -143,8 +143,8 @@ NAMESPACE=fingerprint-id
      --role-name AmazonSageMaker-ExecutionRole \
      --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
  
-  wait_for_crd buckets.s3.services.k8s.aws
-  wait_for_crd notebookinstances.sagemaker.services.k8s.aws
+  k8s_wait_for_crd buckets.s3.services.k8s.aws
+  k8s_wait_for_crd notebookinstances.sagemaker.services.k8s.aws
 
   oc -n "${NAMESPACE}" \
     apply -f openshift/ack-examples
@@ -274,12 +274,12 @@ setup_gradio(){
 
 setup_grafana(){
   oc apply -k openshift/operators/grafana-operator/overlays/models
-  wait_for_crd grafanas.integreatly.org
+  k8s_wait_for_crd grafanas.integreatly.org
 }
 
 setup_prometheus(){
   oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
-  wait_for_crd prometheuses.monitoring.coreos.com
+  k8s_wait_for_crd prometheuses.monitoring.coreos.com
 }
 
 delete_demo(){
