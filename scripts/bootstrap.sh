@@ -284,7 +284,7 @@ setup_prometheus(){
 
 delete_demo(){
 
-  echo "Please be patient, this may take a while (10 mins+)...
+  echo "Please be patient, this may take a while (10 mins+)..."
 
   NAMESPACE=fingerprint-id
   oc -n ${NAMESPACE} \
