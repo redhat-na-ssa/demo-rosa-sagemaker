@@ -16,7 +16,7 @@ setup_packages(){
 sudo -u ec2-user -i <<'EOF'
 
 # PARAMETERS
-PACKAGE=tensorflow==2.11
+PACKAGE=tensorflow==2.14
 
 source /home/ec2-user/anaconda3/bin/activate
 
