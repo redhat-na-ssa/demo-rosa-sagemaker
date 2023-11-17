@@ -29,7 +29,7 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     fingerprint = {
         "inputs": [
             {
-                "name": "input",
+                "name": "model_input",
                 "shape": [1, img_size, img_size, 1],
                 "datatype": "FP32",
                 "data": img.tolist(),
