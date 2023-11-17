@@ -30,7 +30,7 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
         "inputs": [
             {
                 "name": "model_input",
-                "shape": [1, img_size, img_size, 1],
+                "shape": [-1, img_size, img_size, 3],
                 "datatype": "FP32",
                 "data": img.tolist(),
             }
