@@ -16,7 +16,7 @@ setup_packages(){
 sudo -u ec2-user -i <<'EOF'
 
 # PARAMETERS
-PACKAGE=tensorflow==2.11
+PACKAGE=tensorflow==2.14
 
 source /home/ec2-user/anaconda3/bin/activate
 
@@ -31,7 +31,7 @@ echo "Conda ENV: $ENVIRONMENT"
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
 pip install -U pip --quiet
-pip install --upgrade "$PACKAGE" --quiet
+pip install "$PACKAGE" --quiet
 
 conda deactivate
 
