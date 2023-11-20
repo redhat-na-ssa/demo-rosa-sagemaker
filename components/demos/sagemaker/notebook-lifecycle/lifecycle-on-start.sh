@@ -3,12 +3,12 @@
 
 #set -e
 
-setup_cmds(){
+setup_cli_other(){
 # setup ocp / k8s / misc tools
 curl -sL https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/components/demos/sagemaker/notebook-lifecycle/setup-k8s-tools.sh | bash
 }
 
-setup_packages(){
+kludge_conda_tensorflow(){
 
 # OVERVIEW
 # This script installs a single pip package in a single SageMaker conda environments.
@@ -39,7 +39,7 @@ EOF
 
 }
 
-setup_idle(){
+setup_notebook_idle(){
 
 # OVERVIEW
 # This script stops a SageMaker notebook once it's idle for more than 60 minutes (default time)
@@ -79,8 +79,6 @@ else
 fi
 
 echo "Found boto3 at $PYTHON_DIR"
-
-
 echo "Starting the SageMaker autostop script in cron"
 
 (crontab -l 2>/dev/null; echo "*/5 * * * * $PYTHON_DIR $SCRIPT_DST --time $IDLE_TIME --ignore-connections >> /var/log/jupyter.log") | crontab -
@@ -135,7 +133,7 @@ else
 fi
 }
 
-setup_repo(){
+setup_git_repo(){
 # kludge: due to no CodeRepository CR
 
 GIT_REPO=https://github.com/redhat-na-ssa/datasci-fingerprint.git
@@ -149,10 +147,10 @@ chown ec2-user:ec2-user -R /home/ec2-user/SageMaker
 }
 
 # boiler plate
-setup_packages
-setup_idle
+kludge_conda_tensorflow
+setup_notebook_idle
 
 # additional
-setup_repo
-setup_cmds
+setup_git_repo
+setup_cli_other
 activate_good_vibes
