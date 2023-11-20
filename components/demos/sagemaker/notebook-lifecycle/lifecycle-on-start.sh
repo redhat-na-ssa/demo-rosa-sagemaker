@@ -58,6 +58,7 @@ IDLE_TIME=3600
 echo "Fetching the autostop script"
 SCRIPT_URL=https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/components/demos/sagemaker/notebook-lifecycle/autostop.py
 SCRIPT_DST=/usr/local/bin/autostop.py
+
 curl "${SCRIPT_URL}" -o "${SCRIPT_DST}"
 chmod +x "${SCRIPT_DST}"
 

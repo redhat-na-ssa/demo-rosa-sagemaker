@@ -175,8 +175,7 @@ setup_dataset(){
   tar -Jxf "${SCRATCH}"/.raw/left.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/right.tar.xz -C "${SCRATCH}"/train/ && \
   tar -Jxf "${SCRATCH}"/.raw/real.tar.xz -C "${SCRATCH}" && \
-  tar -Jxf "${SCRATCH}"/.raw/model-v1-full.tar.xz -C "${SCRATCH}"/models && \
-  tar -Jxf "${SCRATCH}"/.raw/model-v2-full.tar.xz -C "${SCRATCH}"/models
+  tar -Jxf "${SCRATCH}"/.raw/hand_v1.tar.xz -C "${SCRATCH}"/models
 }
 
 setup_s3(){
@@ -268,7 +267,7 @@ setup_gradio(){
 
   oc -n ${NAMESPACE} set env \
     deploy/${APP_NAME} \
-    INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/fingerprint \
+    INFERENCE_ENDPOINT=http://model-server-s3:8000/v2/models/hand \
     LOGLEVEL=DEBUG
 }
 

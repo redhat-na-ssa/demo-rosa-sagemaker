@@ -74,7 +74,7 @@ if __name__ == "__main__":
     local_dev = """
     For local testing try:
 
-    export INFERENCE_ENDPOINT="${INFERENCE_ENDPOINT:-http://model-server-embedded:8000/v2/models/fingerprint}"
+    export INFERENCE_ENDPOINT="${INFERENCE_ENDPOINT:-http://model-server-embedded:8000/v2/models/hand}"
     curl ${INFERENCE_ENDPOINT} | python -m json.tool
     """
 
