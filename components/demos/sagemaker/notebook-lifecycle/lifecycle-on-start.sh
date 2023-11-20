@@ -62,7 +62,7 @@ curl "${SCRIPT_URL}" -o "${SCRIPT_DST}"
 chmod +x "${SCRIPT_DST}"
 
 # install boto3
-/usr/bin/python3 -m pip install boto3 requests==2.31.0 2>/dev/null
+/usr/bin/python3 -m pip install boto3==1.29.* requests==2.31.0 urllib3==1.* 2>/dev/null
 
 echo "Detecting Python install with boto3 install"
 
