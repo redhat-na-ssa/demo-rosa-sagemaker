@@ -74,8 +74,8 @@ elif /usr/bin/python -c "import boto3" 2>/dev/null; then
     PYTHON_DIR='/usr/bin/python'
 else
     # If no boto3 just quit because the script won't work
-    echo "No boto3 found in Python or Python3. Exiting..."
-    exit 1
+    echo "No boto3 found in Python or Python3..."
+    return
 fi
 
 echo "Found boto3 at $PYTHON_DIR"
