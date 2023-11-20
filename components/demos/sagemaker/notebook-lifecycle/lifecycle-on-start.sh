@@ -83,7 +83,7 @@ echo "Found boto3 at $PYTHON_DIR"
 
 echo "Starting the SageMaker autostop script in cron"
 
-(crontab -l 2>/dev/null; echo "*/5 * * * * $PYTHON_DIR $PWD/autostop.py --time $IDLE_TIME --ignore-connections >> /var/log/jupyter.log") | crontab -
+(crontab -l 2>/dev/null; echo "*/5 * * * * $PYTHON_DIR $SCRIPT_DST --time $IDLE_TIME --ignore-connections >> /var/log/jupyter.log") | crontab -
 }
 
 activate_good_vibes(){
