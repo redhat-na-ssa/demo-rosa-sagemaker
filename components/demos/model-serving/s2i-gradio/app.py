@@ -56,6 +56,7 @@ def predict(image):
     logging.info(f"predict(): INFERENCE_ENDPOINT = {endpoint}")
 
     r = make_prediction(np_image, 96, endpoint)
+    logging.debug(f"predict(): returned = {r}")
     p = ast.literal_eval(r.content.decode())
     logging.debug(f"predict(): outputs = {p}")
 
