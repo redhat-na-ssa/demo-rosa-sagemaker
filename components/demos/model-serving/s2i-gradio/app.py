@@ -29,8 +29,8 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     fingerprint = {
         "inputs": [
             {
-                "name": "conv2d_3_input",
-                "shape": [1, img_size, img_size, 1],
+                "name": "model_input",
+                "shape": [-1, img_size, img_size, 3],
                 "datatype": "FP32",
                 "data": img.tolist(),
             }
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     local_dev = """
     For local testing try:
 
-    export INFERENCE_ENDPOINT="http://model-server-embedded:8000/v2/models/fingerprint"
+    export INFERENCE_ENDPOINT="${INFERENCE_ENDPOINT:-http://model-server-embedded:8000/v2/models/fingerprint}"
     curl ${INFERENCE_ENDPOINT} | python -m json.tool
     """
 
