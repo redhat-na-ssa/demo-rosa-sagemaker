@@ -112,13 +112,13 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  oc apply -k openshift/operators/${NAMESPACE}/aggregate/popular
+  # oc apply -k components/operators/ack-system/aggregate/popular
 
-  for type in ec2 ecr iam s3 sagemaker
+  for type in iam s3 sagemaker
   do
-    oc apply -k components/operators/ack-${type}-controller/overlays/alpha
+    oc apply -k components/operators/ack-${type}-controller/operator/overlays/alpha
 
-    < components/operators/ack-${type}-controller/overlays/alpha/user-secrets-secret.yaml \
+    < components/operators/ack-${type}-controller/operator/overlays/alpha/user-secrets-secret.yaml \
       sed "s@UPDATE_AWS_ACCESS_KEY_ID@${AWS_ACCESS_KEY_ID}@; s@UPDATE_AWS_SECRET_ACCESS_KEY@${AWS_SECRET_ACCESS_KEY}@" | \
       oc -n ${NAMESPACE} apply -f -
   done
@@ -134,7 +134,7 @@ NAMESPACE=fingerprint-id
   # create a SageMaker execution role  
   aws iam create-role \
      --role-name AmazonSageMaker-ExecutionRole \
-     --assume-role-policy-document file://sagemaker/awsexecutionrole-sagemaker.json
+     --assume-role-policy-document file://components/demos/sagemaker/notebook-lifecycle/awsexecutionrole-sagemaker.json
 
   sleep 4
 
@@ -210,7 +210,7 @@ setup_triton(){
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
     --name s2i-triton \
-    --context-dir /serving/s2i-triton \
+    --context-dir components/demos/model-serving/s2i-triton \
     --strategy docker
   
   echo "Be patient, this may take a while (10 min)..."
@@ -273,12 +273,13 @@ setup_gradio(){
 }
 
 setup_grafana(){
-  oc apply -k openshift/operators/grafana-operator/overlays/models
+  oc apply -k components/demos/model-serving/resources/grafana-operator/overlays/models
   k8s_wait_for_crd grafanas.integreatly.org
+  oc apply -n models -f components/demos/model-serving/resources/grafana
 }
 
 setup_prometheus(){
-  oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
+  oc apply -k components/demos/model-serving/resources/prometheus-operator/aggregate/overlays/models
   k8s_wait_for_crd prometheuses.monitoring.coreos.com
 }
 

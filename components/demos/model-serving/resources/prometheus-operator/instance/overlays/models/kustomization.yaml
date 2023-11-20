@@ -3,7 +3,11 @@ kind: Kustomization
 
 namespace: models
 
+# bases:
+#   - ../example
+
 resources:
+  - namespace.yaml
   - prometheus-instance.yaml
   - prometheus-rbac.yaml
   - prometheus-route.yaml
