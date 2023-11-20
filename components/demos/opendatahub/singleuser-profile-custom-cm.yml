@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    jupyterhub: singleuser-profiles
+  name: singleuser-profile-custom
+data:
+  jupyterhub-singleuser-profiles.yaml: |
+    profiles:
+    - name: globals
+      env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: aws-sagemaker-env
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              key: AWS_DEFAULT_REGION
+              name: aws-sagemaker-env
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: aws-sagemaker-env
+        - name: EXECUTION_ROLE_ARN
+          valueFrom:
+            secretKeyRef:
+              key: EXECUTION_ROLE_ARN
+              name: aws-sagemaker-env
+        - name: S3_BUCKET
+          valueFrom:
+            secretKeyRef:
+              key: S3_BUCKET
+              name: aws-sagemaker-env
+        - name: S3_ENDPOINT_URL
+          valueFrom:
+            secretKeyRef:
+              key: S3_ENDPOINT_URL
+              name: aws-sagemaker-env

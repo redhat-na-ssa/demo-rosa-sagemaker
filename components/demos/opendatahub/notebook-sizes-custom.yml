@@ -1,0 +1,21 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: odh-jupyterhub-sizes-custom
+  labels:
+    app.kubernetes.io/part-of: jupyterhub
+    component.opendatahub.io/name: jupyterhub
+    # the following label (jupyterhub) is required for ODH to use the config
+    jupyterhub: singleuser-profiles
+    opendatahub.io/component: 'true'
+data:
+  jupyterhub-singleuser-profiles.yaml: |
+    sizes:
+    - name: Expensive
+      resources:
+        requests:
+          memory: 4Gi
+          cpu: 4
+        limits:
+          memory: 32Gi
+          cpu: 16
