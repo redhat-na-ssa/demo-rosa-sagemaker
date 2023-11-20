@@ -56,11 +56,13 @@ setup_idle(){
 IDLE_TIME=3600
 
 echo "Fetching the autostop script"
-SCRIPT=https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/components/demos/sagemaker/notebook-lifecycle/autostop.py
-wget "${SCRIPT}"
+SCRIPT_URL=https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/components/demos/sagemaker/notebook-lifecycle/autostop.py
+SCRIPT_DST=/usr/local/bin/autostop.py
+curl "${SCRIPT_URL}" -o "${SCRIPT_DST}"
+chmod +x "${SCRIPT_DST}"
 
 # install boto3
-/usr/bin/python3 -m pip install boto3 2>/dev/null
+/usr/bin/python3 -m pip install boto3 requests==2.31.0 2>/dev/null
 
 echo "Detecting Python install with boto3 install"
 

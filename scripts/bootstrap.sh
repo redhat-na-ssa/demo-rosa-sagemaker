@@ -112,7 +112,7 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  # oc apply -k components/operators/ack-system/aggregate/popular
+  oc apply -k components/operators/ack-system/instance
 
   for type in iam s3 sagemaker
   do
@@ -289,7 +289,9 @@ delete_demo(){
 
   NAMESPACE=fingerprint-id
   oc -n ${NAMESPACE} \
-    delete all,bucket,notebookinstance,notebookinstancelifecycleconfig,kfdef --all --wait
+    delete all,bucket,notebookinstance,notebookinstancelifecycleconfig --all --wait
+  oc -n ${NAMESPACE} \
+    delete kfdef --all --wait
 
   NAMESPACE=models
   oc -n ${NAMESPACE} \
@@ -328,8 +330,8 @@ setup_demo(){
   setup_ack_system
   setup_sagemaker
 
-  setup_grafana
   setup_prometheus
+  setup_grafana
   setup_gradio
   setup_triton_metrics
   setup_triton
