@@ -5,7 +5,7 @@
 
 setup_cmds(){
 # setup ocp / k8s / misc tools
-curl -sL https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/setup-k8s-tools.sh | bash
+curl -sL https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/components/demos/sagemaker/notebook-lifecycle/setup-k8s-tools.sh | bash
 }
 
 setup_packages(){
@@ -56,7 +56,7 @@ setup_idle(){
 IDLE_TIME=3600
 
 echo "Fetching the autostop script"
-SCRIPT=https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/sagemaker/autostop.py
+SCRIPT=https://raw.githubusercontent.com/redhat-na-ssa/demo-rosa-sagemaker/main/components/demos/sagemaker/notebook-lifecycle/autostop.py
 wget "${SCRIPT}"
 
 # install boto3
