@@ -1,59 +1,81 @@
 #!/bin/bash
-#set -e
+# set -e
 
-usage(){
+# 8 seconds is usually enough time for the average user to realize they foobar
+export SLEEP_SECONDS=8
 
-echo "
-You can run individual functions!
+################# standard init #################
 
-example:
-  setup_demo
-  delete_demo
-"
+check_shell(){
+  [ -n "$BASH_VERSION" ] && return
+  echo "Please verify you are running in bash shell"
+  sleep "${SLEEP_SECONDS:-8}"
 }
+
+check_git_root(){
+  if [ -d .git ] && [ -d scripts ]; then
+    GIT_ROOT=$(pwd)
+    export GIT_ROOT
+    echo "GIT_ROOT: ${GIT_ROOT}"
+  else
+    echo "Please run this script from the root of the git repo"
+    exit
+  fi
+}
+
+get_script_path(){
+  SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+  echo "SCRIPT_DIR: ${SCRIPT_DIR}"
+}
+
+check_shell
+check_git_root
+get_script_path
+
+################# standard init #################
 
 is_sourced() {
-  if [ -n "$ZSH_VERSION" ]; then 
+  if [ -n "$ZSH_VERSION" ]; then
       case $ZSH_EVAL_CONTEXT in *:file:*) return 0;; esac
-  else  # add additional shell names here, if needed
+  else  # Add additional POSIX-compatible shell names here, if needed.
       case ${0##*/} in dash|-dash|bash|-bash|ksh|-ksh|sh|-sh) return 0;; esac
   fi
-  return 1  # NOT sourced
+  return 1  # NOT sourced.
 }
 
-setup_venv(){
-  python3 -m venv venv
-  source venv/bin/activate
-  pip install -q -U pip
-  pip install -q awscli
-
-  check_venv || usage
-}
-
-check_venv(){
+py_check_venv(){
   # activate python venv
-  [ -d venv ] && . venv/bin/activate || setup_venv
+  [ -d venv ] || py_setup_venv 
+  . venv/bin/activate
+  [ -e requirements.txt ] && pip install -q -r requirements.txt
+
+  pip install -q -U awscli
+
 }
 
-check_oc(){
-  echo "Are you on the right OCP cluster?"
+py_setup_venv(){
+  python3 -m venv venv
+  . venv/bin/activate
+  pip install -q -U pip
 
-  oc whoami || exit 0
-  export UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
-  oc status
-
-  echo "UUID: ${UUID}"
-  sleep 4
+  py_check_venv || usage
 }
 
-get_aws_key(){
-  # get aws creds
-  export AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
-  export AWS_SECRET_ACCESS_KEY=$(oc -n kube-system extract secret/aws-creds --keys=aws_secret_access_key --to=-)
-  export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
+ocp_check_login(){
+  oc whoami || return 1
+  oc cluster-info | head -n1
+  echo
+}
 
-  echo "NOTICE!!! - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
-  sleep 4
+ocp_check_info(){
+  ocp_check_login || return 1
+
+  echo "NAMESPACE: $(oc project -q)"
+  sleep "${SLEEP_SECONDS:-8}"
+}
+
+ocp_aws_cluster(){
+  oc -n kube-system get secret/aws-creds -o name > /dev/null 2>&1 || return 1
 }
 
 setup_namespace(){
@@ -63,9 +85,24 @@ setup_namespace(){
     oc project ${NAMESPACE}
 }
 
-wait_for_crd(){
+ocp_aws_get_key(){
+  # get aws creds
+  ocp_aws_cluster || return 1
+  
+  AWS_ACCESS_KEY_ID=$(oc -n kube-system extract secret/aws-creds --keys=aws_access_key_id --to=-)
+  AWS_SECRET_ACCESS_KEY=$(oc -n kube-system extract secret/aws-creds --keys=aws_secret_access_key --to=-)
+  AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-2}
+
+  export AWS_ACCESS_KEY_ID
+  export AWS_SECRET_ACCESS_KEY
+  export AWS_DEFAULT_REGION
+
+  echo "AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}"
+}
+
+k8s_wait_for_crd(){
   CRD=${1}
-  until oc get crd "${CRD}" >/dev/null 2>&1
+  until kubectl get crd "${CRD}" >/dev/null 2>&1
     do sleep 1
   done
 }
@@ -75,7 +112,7 @@ setup_ack_system(){
 
   setup_namespace ${NAMESPACE}
 
-  oc apply -k components/operators/ack-controllers/aggregate/instance
+  oc apply -k openshift/operators/${NAMESPACE}/aggregate/popular
 
   for type in ec2 ecr iam s3 sagemaker
   do
@@ -86,6 +123,8 @@ setup_ack_system(){
       oc -n ${NAMESPACE} apply -f -
   done
 }
+
+################# demo specific #################
 
 setup_sagemaker(){
 NAMESPACE=fingerprint-id
@@ -104,8 +143,8 @@ NAMESPACE=fingerprint-id
      --role-name AmazonSageMaker-ExecutionRole \
      --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
  
-  wait_for_crd buckets.s3.services.k8s.aws
-  wait_for_crd notebookinstances.sagemaker.services.k8s.aws
+  k8s_wait_for_crd buckets.s3.services.k8s.aws
+  k8s_wait_for_crd notebookinstances.sagemaker.services.k8s.aws
 
   oc -n "${NAMESPACE}" \
     apply -f components/demos/sagemaker/ack-examples
@@ -121,42 +160,6 @@ NAMESPACE=fingerprint-id
     sed "s@000000000000@${ARN}@g" | \
     oc -n ${NAMESPACE} apply -f -
 
-}
-
-setup_odh_v1.3.0(){
-  NAMESPACE=fingerprint-id
-  ODH_VERSION=1.3.0
-
-  # install odh sub
-  oc -n openshift-operators \
-    apply -f components/demos/opendatahub/odh-v1.3.0-sub.yml
-  
-  # kludge: just sleep
-  sleep 10
-  
-  # approve operator install
-  ODH_INSTALL=$(
-    oc -n openshift-operators \
-    get installplan \
-    -l operators.coreos.com/opendatahub-operator.openshift-operators | \
-      grep ${ODH_VERSION} | \
-      awk '{print $1}'
-  )
-
-  oc -n openshift-operators \
-    patch installplan/${ODH_INSTALL} \
-    --type=merge \
-    --patch '{"spec":{"approved": true }}'
-
-  wait_for_crd kfdefs.kfdef.apps.kubeflow.org
-
-  # install odh resources
-  oc -n "${NAMESPACE}" \
-    apply -f components/demos/opendatahub
-
-  # install custom sagemeker notebook
-  oc -n "${NAMESPACE}" \
-    apply -f components/demos/opendatahub/custom-notebook
 }
 
 setup_dataset(){
@@ -184,13 +187,12 @@ setup_s3(){
   export S3_POSTFIX=data
 
   export S3_BUCKET_DATA="${S3_BASE}-${S3_POSTFIX}-${UUID}"
+
+  aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
 }
 
 setup_s3_transfer(){
   which aws || return
-
-  aws s3 ls | grep ${S3_BUCKET_DATA} || aws s3 mb s3://${S3_BUCKET_DATA}
-
   echo "Copying dataset into s3://${S3_BUCKET_DATA}..."
 
   aws s3 sync "${SCRATCH}"/train/left "s3://${S3_BUCKET_DATA}"/train/left --quiet && \
@@ -208,7 +210,7 @@ setup_triton(){
   oc -n ${NAMESPACE} new-build \
     https://github.com/redhat-na-ssa/demo-rosa-sagemaker \
     --name s2i-triton \
-    --context-dir /components/demos/model-serving/s2i-triton \
+    --context-dir /serving/s2i-triton \
     --strategy docker
   
   echo "Be patient, this may take a while (10 min)..."
@@ -258,8 +260,11 @@ setup_gradio(){
     --context-dir /components/demos/model-serving/s2i-gradio
 
   oc -n ${NAMESPACE} expose service \
+    ${APP_NAME}
+
+  oc -n ${NAMESPACE} patch route \
     ${APP_NAME} \
-    --overrides='{"spec":{"tls":{"termination":"edge"}}}'
+    --patch='{"spec":{"tls":{"termination":"edge"}}}'
 
   oc -n ${NAMESPACE} set env \
     deploy/${APP_NAME} \
@@ -268,16 +273,19 @@ setup_gradio(){
 }
 
 setup_grafana(){
-  oc apply -k components/operators/grafana-operator/overlays/models
-  wait_for_crd grafanas.integreatly.org
+  oc apply -k openshift/operators/grafana-operator/overlays/models
+  k8s_wait_for_crd grafanas.integreatly.org
 }
 
 setup_prometheus(){
-  oc apply -k components/operators/prometheus-operator/aggregate/overlays/models
-  wait_for_crd prometheuses.monitoring.coreos.com
+  oc apply -k openshift/operators/prometheus-operator/aggregate/overlays/models
+  k8s_wait_for_crd prometheuses.monitoring.coreos.com
 }
 
 delete_demo(){
+
+  echo "Please be patient, this may take a while (10 mins+)..."
+
   NAMESPACE=fingerprint-id
   oc -n ${NAMESPACE} \
     delete all,bucket,notebookinstance,notebookinstancelifecycleconfig,kfdef --all --wait
@@ -292,10 +300,23 @@ delete_demo(){
   done
 }
 
+usage(){
+
+echo "
+You can run individual functions!
+
+example:
+  setup_demo
+  delete_demo
+"
+}
+
+################# demo specific #################
+
 setup_demo(){
-  check_venv
-  check_oc
-  get_aws_key
+  py_check_venv
+  ocp_check_info
+  ocp_aws_get_key
   
   setup_dataset
 
@@ -305,7 +326,6 @@ setup_demo(){
   
   setup_ack_system
   setup_sagemaker
-  setup_odh_v1.3.0
 
   setup_grafana
   setup_prometheus
