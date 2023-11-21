@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../../../../../operators/prometheus/operator/overlays/beta
+
+patches:
+  - patch: |-
+      - op: add
+        path: /spec/targetNamespaces
+        value:
+          - models
+    target:
+      kind: OperatorGroup
+      name: prometheus

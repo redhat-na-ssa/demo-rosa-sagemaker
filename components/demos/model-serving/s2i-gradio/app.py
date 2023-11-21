@@ -26,21 +26,22 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     # input layer name of the model.
     #
 
-    fingerprint = {
+    info = requests.get(endpoint).json()
+    logging.debug(f"predict(): info {info}")    
+
+    submit = {
         "inputs": [
             {
                 "name": "model_input",
-                "shape": [-1, img_size, img_size, 3],
+                "shape": [1, img_size, img_size, 1],
                 "datatype": "FP32",
                 "data": img.tolist(),
             }
         ]
     }
 
-    req2 = fingerprint
-
     url = endpoint + "/infer"
-    r = requests.post(url, json=req2)
+    r = requests.post(url, json=submit)
     return r
 
 
@@ -52,18 +53,20 @@ def predict(image):
     logging.debug(f"predict(): resized = {resized}")
     np_image = np.asarray(resized)
 
-    endpoint = os.getenv("INFERENCE_ENDPOINT", "http://localhost:8000")
+    endpoint = os.getenv("INFERENCE_ENDPOINT", "http://localhost:8000/v2/models/hand")
     logging.info(f"predict(): INFERENCE_ENDPOINT = {endpoint}")
 
     r = make_prediction(np_image, 96, endpoint)
-    logging.debug(f"predict(): returned = {r}")
+    logging.debug(f"predict(): r = {r}")
     p = ast.literal_eval(r.content.decode())
     logging.debug(f"predict(): outputs = {p}")
 
-    if p["outputs"][0]["data"][0] > 0.95:
-        return_string = "Left Hand"
+    percent = p["outputs"][0]["data"][0]
+
+    if percent > 0.95:
+        return_string = "Left Hand - " + str(percent)
     else:
-        return_string = "Right Hand"
+        return_string = "Right Hand - " + str(percent)
 
     return f"Prediction = {return_string}"
 
@@ -75,7 +78,7 @@ if __name__ == "__main__":
     local_dev = """
     For local testing try:
 
-    export INFERENCE_ENDPOINT="${INFERENCE_ENDPOINT:-http://model-server-embedded:8000/v2/models/hand}"
+    export INFERENCE_ENDPOINT="http://localhost:8000/v2/models/hand"
     curl ${INFERENCE_ENDPOINT} | python -m json.tool
     """
 

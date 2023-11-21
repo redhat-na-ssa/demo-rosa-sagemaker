@@ -272,14 +272,16 @@ setup_gradio(){
 }
 
 setup_grafana(){
-  oc apply -k components/demos/model-serving/resources/grafana-operator/overlays/models
+  oc apply -k components/demos/model-serving/resources/grafana/operator
   k8s_wait_for_crd grafanas.integreatly.org
-  oc apply -n models -f components/demos/model-serving/resources/grafana
+  oc apply -k components/demos/model-serving/resources/grafana/instance
 }
 
 setup_prometheus(){
-  oc apply -k components/demos/model-serving/resources/prometheus-operator/aggregate/overlays/models
+  oc apply -k components/demos/model-serving/resources
+  oc apply -k components/demos/model-serving/resources/prometheus/operator
   k8s_wait_for_crd prometheuses.monitoring.coreos.com
+  oc apply -k components/demos/model-serving/resources/prometheus/instance
 }
 
 delete_demo(){
@@ -296,7 +298,7 @@ delete_demo(){
   oc -n ${NAMESPACE} \
     delete grafana,prometheus --all --wait
 
-  for ns in ack-system fingerprint-id grafana models prometheus
+  for ns in ack-system fingerprint-id grafana-operator models prometheus
   do
     oc delete project "${ns}"
   done

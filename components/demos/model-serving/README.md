@@ -1,6 +1,6 @@
 # Model Serving and Inference
 
-### Deploy the Triton model server
+## Deploy the Triton model server
 
 The Triton container is large and will take several minutes to build.
 
@@ -13,11 +13,13 @@ from a public s3 bucket.
 - `AWS_DEFAULT_REGION=us-east-1`
 
 If necessary create the Openshift project.
+
 ```
 oc new-project ${MODEL_SERVER_NAMESPACE}
 ```
 
 Deploy Triton.
+
 ```
 oc new-app \
   https://github.com/redhat-na-ssa/s2i-patch.git
@@ -31,6 +33,7 @@ oc new-app \
 ```
 
 Create an https route for the model server.
+
 ```
 oc create route edge ${TRITON_APP_NAME} --service=${TRITON_APP_NAME} --port=8000
 ```
@@ -38,13 +41,17 @@ oc create route edge ${TRITON_APP_NAME} --service=${TRITON_APP_NAME} --port=8000
 #### Testing
 
 Basic model server test
+
 ```
 export INFERENCE_ENDPOINT=$(oc get route -n ${MODEL_SERVER_NAMESPACE} ${TRITON_APP_NAME} --template={{.spec.host}})
 ```
+
 ```
 curl https://${INFERENCE_ENDPOINT}/v2 | python -m json.tool
 ```
+
 Sample output
+
 ```
 {
     "name": "triton",
@@ -67,11 +74,13 @@ Sample output
 ```
 
 Model metadata test
+
 ```
 curl https://${INFERENCE_ENDPOINT}/v2/models/fingerprint | python -m json.tool
 ```
 
 Sample output.
+
 ```
 {
     "name": "fingerprint",
@@ -104,7 +113,7 @@ Sample output.
 }
 ```
 
-#### Deploy the inference application to Openshift.
+#### Deploy the inference application to Openshift
 
 ```
 cd application
@@ -117,6 +126,7 @@ INFERENCE_ENDPOINT=$(oc get route ${TRITON_APP_NAME} -n ${MODEL_SERVER_NAMESPACE
 ```
 
 Create a project.
+
 ```
 oc new-project ${APP_NAMESPACE}
 ```
@@ -126,6 +136,7 @@ oc new-app -n ${APP_NAMESPACE} --name=${APP_NAME} --env=INFERENCE_ENDPOINT=${INF
 ```
 
 Create a route and visit the URL.
+
 ```
 oc create route edge ${APP_NAME} --service=${APP_NAME} --port=8080 -n ${APP_NAMESPACE}
 ```
