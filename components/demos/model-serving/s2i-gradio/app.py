@@ -69,7 +69,7 @@ def predict(image):
     else:
         return_string = f"Right Hand"
 
-    return f"Prediction = {return_string}\n\n{json.dumps(p, indent=4)}"
+    return f"Prediction = {return_string}\n\nResult =\n{json.dumps(p, indent=4)}"
 
 
 if __name__ == "__main__":
