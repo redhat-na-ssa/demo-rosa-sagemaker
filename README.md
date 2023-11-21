@@ -131,6 +131,44 @@ delete_demo
 
 <!-- USAGE EXAMPLES -->
 
+### Tutorial
+
+```commandline
+# From the AWS Web Console
+# search for `SageMaker` in the searchbar and go to the page
+
+# navigate down the menu to `SageMaker Notebooks`
+
+# launch the JupyterLab instance
+
+# in jupyter, go to `notebooks` directory, open and run each notebook in order
+
+# IMPORTANT You should only have one notebook open at a time. After you run each notebook, Restart the Kernel and Clear the output, then Close the notebook
+
+# open and run the 01_data_processing.ipynb
+
+# open and run the 02_model_train_hand.ipynb
+
+# From the OpenShift Web Console
+
+# navigate to the Project `models`
+
+# go to the `Networking > Routes` menu item
+
+# open the URL for the `gradio-client` instance and interact with the model
+
+# under the `Routes` menu, open the URL for the `grafana` instance
+
+# to obtain the credentials, from the OCP Web Console, click on `Workloads > Secrets`
+
+# open the `grafana-root-user` instance, copy and paste the credentials into the grafana dashboard
+
+# TODO update
+
+# open and run the 03_model_tune_hand.ipynb
+
+```
+
 ### Intended Usage
 
 Intended to be run on Red Hat OpenShift Container Platform on AWS (self-managed). Alternatively, Red Hat OpenShift on AWS (managed).
