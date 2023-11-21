@@ -5,7 +5,7 @@ import numpy as np
 import requests
 import ast
 import logging
-import os
+import os,json
 from PIL import Image
 import gradio as gr
 
@@ -27,14 +27,14 @@ def make_prediction(img: np.array, img_size: int, endpoint: str) -> requests:
     #
 
     info = requests.get(endpoint).json()
-    logging.debug(f"predict(): info {info}")    
+    logging.debug(f"predict(): info {info}")
 
     submit = {
         "inputs": [
             {
-                "name": "model_input",
+                "name": info["inputs"][0]["name"],
                 "shape": [1, img_size, img_size, 1],
-                "datatype": "FP32",
+                "datatype": info["inputs"][0]["datatype"],
                 "data": img.tolist(),
             }
         ]
@@ -54,22 +54,21 @@ def predict(image):
     np_image = np.asarray(resized)
 
     endpoint = os.getenv("INFERENCE_ENDPOINT", "http://localhost:8000/v2/models/hand")
-    logging.info(f"predict(): INFERENCE_ENDPOINT = {endpoint}")
+    logging.debug(f"predict(): INFERENCE_ENDPOINT = {endpoint}")
 
     r = make_prediction(np_image, 96, endpoint)
     logging.debug(f"predict(): r = {r}")
     p = ast.literal_eval(r.content.decode())
-    logging.debug(f"predict(): outputs = {p}")
+    logging.info(f"predict(): outputs = {p}")
 
     percent = p["outputs"][0]["data"][0]
 
     if percent > 0.95:
-        return_string = "Left Hand - " + str(percent)
+        return_string = f"Left Hand"
     else:
-        return_string = "Right Hand - " + str(percent)
+        return_string = f"Right Hand"
 
-    return f"Prediction = {return_string}"
-
+    return f"Prediction = {return_string}\n{json.dumps(p, indent=4)}"
 
 if __name__ == "__main__":
 
@@ -89,7 +88,7 @@ if __name__ == "__main__":
         gr.Image(type="pil"),
         "text",
         analytics_enabled=False,
-        flagging_options=["blurry", "incorrect", "other"],
+        flagging_options=["blurry", "incorrect", "offensive"],
         flagging_dir="flagged",
         examples=sorted(
             [os.path.join("images/", file) for file in os.listdir("images")],
@@ -102,7 +101,7 @@ if __name__ == "__main__":
         #     os.path.join(os.path.abspath(""), "images/504__M_Right_index_finger.png"),
         # ],
         title="Fingerprint Classifier",
-	description="In the examples provided, the first two images are Left prints and the second two are Right prints"
+	description="In the examples provided, the first two images are Left prints and the second two are Right prints."
     )
 
     # - Set server name and port for Gradio
