@@ -102,6 +102,7 @@ if __name__ == "__main__":
         #     os.path.join(os.path.abspath(""), "images/504__M_Right_index_finger.png"),
         # ],
         title="Fingerprint Classifier",
+	description="In the examples provided, the first two images are Left prints and the second two are Right prints"
     )
 
     # - Set server name and port for Gradio
