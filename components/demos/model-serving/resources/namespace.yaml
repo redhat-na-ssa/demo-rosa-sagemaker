@@ -3,5 +3,5 @@ kind: Namespace
 metadata:
   annotations:
     openshift.io/description: really, really ridiculously good looking...
-    openshift.io/display-name: Hand Models
+    openshift.io/display-name: Hand Models (Demo)
   name: models
