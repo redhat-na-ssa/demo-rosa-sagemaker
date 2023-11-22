@@ -192,12 +192,16 @@ delete_demo
 
 # From the AWS Web Console
 # search for `S3` in the searchbar and navigate to the bucket where our data (sagemaker-fingerprint-data-<UUID>'
+
 # move into the folder with our model and review the second version of our tuned model
 
 # From the OpenShift Web Console
 # click on `Workloads > Pods'
+
 # open the 'model-server-s3-<UUID>' pod and click on the `Environment`
+
 # notice the MODEL_REPOSITORY value that will pull that version of the model in the folder structure
+
 # open the URL for the `gradio-client` instance and interact with the model (notice the "model_version": "2")
 
 ```
