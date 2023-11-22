@@ -135,9 +135,13 @@ delete_demo
 
 ```commandline
 # From the AWS Web Console
+# search for `S3` in the searchbar and navigate to the bucket where our data (sagemaker-fingerprint-data-<UUID>'
+
 # search for `SageMaker` in the searchbar and go to the page
 
-# navigate down the menu to `SageMaker Notebooks`
+# navigate down the menu to `Notebook > Notebook Instances`
+
+# (optional) instance the instance and lifecycle configuration
 
 # launch the JupyterLab instance
 
@@ -145,11 +149,21 @@ delete_demo
 
 # IMPORTANT You should only have one notebook open at a time. After you run each notebook, Restart the Kernel and Clear the output, then Close the notebook
 
-# open and run the 01_data_processing.ipynb
+# open, run and close the following notebooks in order:
 
-# open and run the 02_model_train_hand.ipynb
+  # 00_data_exploration.ipynb
+  
+  # 01_data_processing.ipynb
+  
+  # 02_model_train_hand.ipynb
+
+# search for `S3` in the searchbar and navigate to the bucket where our data (sagemaker-fingerprint-data-<UUID>'
+
+# move into the folder with our model
 
 # From the OpenShift Web Console
+
+# navigate to the `Operators > Installed Operators` and notice the AWS operators
 
 # navigate to the Project `models`
 
@@ -161,11 +175,30 @@ delete_demo
 
 # to obtain the credentials, from the OCP Web Console, click on `Workloads > Secrets`
 
-# open the `grafana-root-user` instance, copy and paste the credentials into the grafana dashboard
+# open the `grafana-admin-credentials` instance, copy and paste the credentials into the grafana dashboard
 
-# TODO update
+# go to the four-block waffle menu and click `models`
 
-# open and run the 03_model_tune_hand.ipynb
+# go to `Triton Model Server` and view the dashboard metrics
+
+# From the AWS Web Console SageMaker Notebook
+# open, run and close the following notebooks in order:
+
+  # 03_model_tune_hand.ipynb
+
+  # 04_model_batch_inference.ipynb
+
+# Review the reports and the prediction.csv files saved to your scratch folder
+
+# From the AWS Web Console
+# search for `S3` in the searchbar and navigate to the bucket where our data (sagemaker-fingerprint-data-<UUID>'
+# move into the folder with our model and review the second version of our tuned model
+
+# From the OpenShift Web Console
+# click on `Workloads > Pods'
+# open the 'model-server-s3-<UUID>' pod and click on the `Environment`
+# notice the MODEL_REPOSITORY value that will pull that version of the model in the folder structure
+# open the URL for the `gradio-client` instance and interact with the model (notice the "model_version": "2")
 
 ```
 
