@@ -196,11 +196,11 @@ delete_demo
 # move into the folder with our model and review the second version of our tuned model
 
 # From the OpenShift Web Console
-# click on `Workloads > Pods'
+# click on `Workloads > Deployments'
 
-# open the 'model-server-s3-<UUID>' pod and click on the `Environment`
+# open the gradio-client' deplyoment instance and click on the `Environment` menu item
 
-# notice the MODEL_REPOSITORY value that will pull that version of the model in the folder structure
+# notice the MODEL_REPOSITORY value that will pull the latest version of the model available for inference
 
 # open the URL for the `gradio-client` instance and interact with the model (notice the "model_version": "2")
 
